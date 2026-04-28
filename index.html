@@ -6,1057 +6,639 @@
     <title>TranscriptBot</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
-        *, *::before, *::after {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --p:#7c3aed;--ph:#6d28d9;--ps:rgba(124,58,237,.12);--pg:rgba(124,58,237,.25);--pt:#c4b5fd;
+            --b0:#09090b;--b1:#0f0f14;--b2:#16161d;--b3:#1c1c27;--b4:#232334;--b5:#2a2a3d;
+            --br:rgba(255,255,255,.06);--br2:rgba(255,255,255,.10);
+            --t1:#f1f5f9;--t2:#cbd5e1;--t3:#64748b;--t4:#475569;
+            --ok:#34d399;--err:#f87171;--warn:#fbbf24
         }
-
-        :root {
-            --primary: #7c3aed;
-            --primary-hover: #6d28d9;
-            --primary-soft: rgba(124,58,237,0.12);
-            --primary-glow: rgba(124,58,237,0.25);
-            --primary-text: #c4b5fd;
-            --bg-0: #09090b;
-            --bg-1: #0f0f14;
-            --bg-2: #16161d;
-            --bg-3: #1c1c27;
-            --bg-4: #232334;
-            --bg-5: #2a2a3d;
-            --border: rgba(255,255,255,0.06);
-            --border-2: rgba(255,255,255,0.10);
-            --text-1: #f1f5f9;
-            --text-2: #cbd5e1;
-            --text-3: #64748b;
-            --text-4: #475569;
-            --success: #34d399;
-            --error: #f87171;
-            --warning: #fbbf24;
-        }
-
-        html, body {
-            height: 100%;
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-0);
-            color: var(--text-1);
-            overflow: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--bg-5); border-radius: 99px; }
-
-        /* ═══ LAYOUT ═══ */
-        .app {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 100%;
-        }
-
-        /* ═══ TOPBAR ═══ */
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            background: var(--bg-1);
-            border-bottom: 1px solid var(--border-2);
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
-        .topbar-left {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .avatar {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #fff;
-            position: relative;
-            flex-shrink: 0;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.35);
-        }
-
-        .avatar .dot {
-            position: absolute;
-            bottom: -2px;
-            right: -2px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 2.5px solid var(--bg-1);
-            background: var(--warning);
-            transition: background 0.3s;
-        }
-
-        .avatar .dot.online { background: var(--success); }
-
-        .info h1 {
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-        }
-
-        .info span {
-            font-size: 12px;
-            color: var(--text-3);
-        }
-
-        .topbar-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .pills {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .pill {
-            padding: 6px 15px;
-            border-radius: 999px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            background: var(--bg-3);
-            color: var(--text-3);
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-            user-select: none;
-        }
-
-        .pill:hover {
-            background: var(--bg-4);
-            color: var(--text-2);
-            border-color: var(--border-2);
-        }
-
-        .pill.active {
-            background: var(--primary-soft);
-            color: var(--primary-text);
-            border-color: var(--primary-glow);
-        }
-
-        .model-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--bg-3);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 7px 12px;
-        }
-
-        .model-box i { color: var(--primary); font-size: 13px; }
-
-        .model-box select {
-            background: transparent;
-            border: none;
-            color: var(--text-2);
-            font-size: 12px;
-            font-family: inherit;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .model-box select option {
-            background: var(--bg-3);
-            color: var(--text-1);
-        }
-
-        /* ═══ CHAT AREA ═══ */
-        .chat-area {
-            flex: 1;
-            overflow-y: auto;
-            scroll-behavior: smooth;
-        }
-
-        /* ═══ WELCOME ═══ */
-        .welcome {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 20px;
-            padding: 70px 24px 40px;
-            max-width: 560px;
-            margin: 0 auto;
-        }
-
-        .welcome-icon {
-            width: 84px;
-            height: 84px;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            border-radius: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            color: #fff;
-            box-shadow: 0 8px 40px rgba(124,58,237,0.4);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .welcome h2 {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .welcome p {
-            font-size: 15px;
-            color: var(--text-3);
-            line-height: 1.7;
-        }
-
-        .suggestions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 8px;
-        }
-
-        .sug-chip {
-            padding: 10px 20px;
-            background: var(--bg-2);
-            border: 1px solid var(--border-2);
-            border-radius: 999px;
-            font-size: 13px;
-            color: var(--text-2);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .sug-chip:hover {
-            background: var(--primary-soft);
-            border-color: var(--primary-glow);
-            color: var(--primary-text);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(124,58,237,0.15);
-        }
-
-        /* ═══ MESSAGES ═══ */
-        .messages {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 0 24px 24px;
-            width: 100%;
-        }
-
-        .msg {
-            display: flex;
-            gap: 12px;
-            animation: msgSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes msgSlide {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .msg.user {
-            flex-direction: row-reverse;
-            padding-left: 48px;
-        }
-
-        .msg.bot {
-            padding-right: 48px;
-        }
-
-        .msg-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            margin-top: 4px;
-        }
-
-        .msg.user .msg-avatar {
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            color: #fff;
-        }
-
-        .msg.bot .msg-avatar {
-            background: var(--bg-3);
-            border: 1px solid var(--border-2);
-            color: var(--primary-text);
-        }
-
-        .msg-body {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            min-width: 0;
-        }
-
-        .msg-bubble {
-            padding: 14px 18px;
-            font-size: 14px;
-            line-height: 1.75;
-            word-break: break-word;
-        }
-
-        .msg.user .msg-bubble {
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            color: #fff;
-            border-radius: 20px 6px 20px 20px;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.25);
-        }
-
-        .msg.bot .msg-bubble {
-            background: var(--bg-2);
-            color: var(--text-2);
-            border: 1px solid var(--border);
-            border-radius: 6px 20px 20px 20px;
-        }
-
-        .msg.bot .msg-bubble strong { color: var(--primary-text); }
-
-        .msg.bot .msg-bubble code {
-            background: var(--bg-4);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 12px;
-            color: var(--primary-text);
-            font-family: monospace;
-        }
-
-        .msg-footer {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            color: var(--text-4);
-            padding: 0 6px;
-            flex-wrap: wrap;
-        }
-
-        .msg.user .msg-footer { justify-content: flex-end; }
-
-        .source-tag {
-            font-size: 10px;
-            background: var(--primary-soft);
-            color: var(--primary-text);
-            padding: 2px 10px;
-            border-radius: 999px;
-            border: 1px solid var(--primary-glow);
-        }
-
-        /* ═══ TYPING ═══ */
-        .typing {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 4px 0;
-        }
-
-        .typing span {
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            animation: dotBounce 1.4s infinite ease-in-out;
-            opacity: 0.5;
-        }
-
-        .typing span:nth-child(2) { animation-delay: 0.2s; }
-        .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes dotBounce {
-            0%, 80%, 100% { transform: scale(1); opacity: 0.4; }
-            40% { transform: scale(1.3); opacity: 1; }
-        }
-
-        .streaming::after {
-            content: '▋';
-            animation: blink 0.7s infinite;
-            color: var(--primary);
-            margin-left: 2px;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
-        /* ═══ INPUT AREA ═══ */
-        .input-area {
-            flex-shrink: 0;
-            padding: 0 24px 24px;
-            background: var(--bg-0);
-            z-index: 10;
-        }
-
-        .input-box {
-            max-width: 760px;
-            margin: 0 auto;
-            background: var(--bg-2);
-            border: 1.5px solid var(--border-2);
-            border-radius: 16px;
-            overflow: hidden;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        .input-box:focus-within {
-            border-color: var(--primary-glow);
-            box-shadow: 0 0 0 4px rgba(124,58,237,0.06), 0 8px 32px rgba(0,0,0,0.2);
-        }
-
-        .filter-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 16px 6px;
-            flex-wrap: wrap;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .filter-row .label {
-            font-size: 11px;
-            color: var(--text-4);
-            font-weight: 500;
-        }
-
-        .filter-pills { display: flex; gap: 5px; flex-wrap: wrap; }
-
-        .fpill {
-            padding: 3px 11px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 500;
-            cursor: pointer;
-            background: var(--bg-4);
-            color: var(--text-3);
-            border: 1px solid transparent;
-            transition: all 0.15s;
-        }
-
-        .fpill:hover { background: var(--bg-5); color: var(--text-2); }
-
-        .fpill.active {
-            background: var(--primary-soft);
-            color: var(--primary-text);
-            border-color: var(--primary-glow);
-        }
-
-        .type-row {
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            padding: 12px 16px;
-        }
-
-        .type-row textarea {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text-1);
-            font-size: 15px;
-            resize: none;
-            max-height: 140px;
-            line-height: 1.55;
-            font-family: inherit;
-            min-height: 24px;
-        }
-
-        .type-row textarea::placeholder { color: var(--text-4); }
-        .type-row textarea:disabled { opacity: 0.4; }
-
-        .send-btn {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--primary), #a855f7);
-            border: none;
-            border-radius: 12px;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: all 0.2s;
-            box-shadow: 0 4px 16px rgba(124,58,237,0.35);
-        }
-
-        .send-btn:hover:not(:disabled) {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 6px 24px rgba(124,58,237,0.45);
-        }
-
-        .send-btn:active:not(:disabled) { transform: scale(0.95); }
-
-        .send-btn:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .bottom-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 4px 16px 10px;
-            font-size: 11px;
-            color: var(--text-4);
-        }
-
-        /* ═══ TOAST ═══ */
-        .toast-box {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .toast {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 18px;
-            background: var(--bg-2);
-            border: 1px solid var(--border-2);
-            border-radius: 12px;
-            font-size: 13px;
-            max-width: 320px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-            animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1);
-        }
-
-        .toast.success { border-left: 3px solid var(--success); }
-        .toast.error   { border-left: 3px solid var(--error); }
-        .toast.warning { border-left: 3px solid var(--warning); }
-        .toast.info    { border-left: 3px solid #60a5fa; }
-
-        @keyframes toastIn {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        /* ═══ RESPONSIVE ═══ */
-        @media (max-width: 640px) {
-            .topbar { padding: 12px 16px; }
-            .pills { display: none; }
-            .messages { padding: 0 12px 20px; }
-            .msg.user { padding-left: 20px; }
-            .msg.bot { padding-right: 20px; }
-            .input-area { padding: 0 12px 16px; }
-            .welcome { padding: 40px 16px 24px; }
-            .welcome-icon { width: 64px; height: 64px; font-size: 28px; border-radius: 20px; }
-            .welcome h2 { font-size: 22px; }
+        html,body{height:100%;font-family:'Inter',-apple-system,sans-serif;background:var(--b0);color:var(--t1);overflow:hidden;-webkit-font-smoothing:antialiased}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--b5);border-radius:99px}
+
+        .app{display:flex;flex-direction:column;height:100vh;width:100%}
+
+        /* TOPBAR */
+        .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--b1);border-bottom:1px solid var(--br2);flex-shrink:0;z-index:10;gap:16px}
+        .topbar-left{display:flex;align-items:center;gap:14px}
+        .avatar{width:44px;height:44px;background:linear-gradient(135deg,var(--p),#a855f7);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;position:relative;flex-shrink:0;box-shadow:0 4px 16px rgba(124,58,237,.35)}
+        .avatar .dot{position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;border:2.5px solid var(--b1);background:var(--warn);transition:background .3s}
+        .avatar .dot.online{background:var(--ok)}
+        .info h1{font-size:17px;font-weight:700;letter-spacing:-.01em}
+        .info span{font-size:12px;color:var(--t3)}
+        .topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+        .model-box{display:flex;align-items:center;gap:8px;background:var(--b3);border:1px solid var(--br);border-radius:10px;padding:7px 12px}
+        .model-box i{color:var(--p);font-size:13px}
+        .model-box select{background:transparent;border:none;color:var(--t2);font-size:12px;font-family:inherit;outline:none;cursor:pointer}
+        .model-box select option{background:var(--b3);color:var(--t1)}
+
+        /* CHAT */
+        .chat-area{flex:1;overflow-y:auto;scroll-behavior:smooth}
+
+        /* WELCOME */
+        .welcome{display:flex;flex-direction:column;align-items:center;text-align:center;gap:20px;padding:50px 24px 40px;max-width:600px;margin:0 auto}
+        .welcome-icon{width:84px;height:84px;background:linear-gradient(135deg,var(--p),#a855f7);border-radius:26px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#fff;box-shadow:0 8px 40px rgba(124,58,237,.4);animation:float 3s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        .welcome h2{font-size:26px;font-weight:700;letter-spacing:-.02em}
+        .welcome p{font-size:15px;color:var(--t3);line-height:1.7}
+        .suggestions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+        .sug-chip{padding:10px 20px;background:var(--b2);border:1px solid var(--br2);border-radius:999px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s}
+        .sug-chip:hover{background:var(--ps);border-color:var(--pg);color:var(--pt);transform:translateY(-2px);box-shadow:0 4px 16px rgba(124,58,237,.15)}
+
+        /* MESSAGES */
+        .messages{display:flex;flex-direction:column;gap:6px;max-width:760px;margin:0 auto;padding:0 24px 24px;width:100%}
+        .msg{display:flex;gap:12px;animation:msgSlide .35s cubic-bezier(.16,1,.3,1)}
+        @keyframes msgSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+        .msg.user{flex-direction:row-reverse;padding-left:48px}
+        .msg.bot{padding-right:48px}
+        .msg-avatar{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:4px}
+        .msg.user .msg-avatar{background:linear-gradient(135deg,var(--p),#a855f7);color:#fff}
+        .msg.bot .msg-avatar{background:var(--b3);border:1px solid var(--br2);color:var(--pt)}
+        .msg-body{display:flex;flex-direction:column;gap:6px;min-width:0}
+        .msg-bubble{padding:14px 18px;font-size:14px;line-height:1.75;word-break:break-word}
+        .msg.user .msg-bubble{background:linear-gradient(135deg,var(--p),#a855f7);color:#fff;border-radius:20px 6px 20px 20px;box-shadow:0 4px 16px rgba(124,58,237,.25)}
+        .msg.bot .msg-bubble{background:var(--b2);color:var(--t2);border:1px solid var(--br);border-radius:6px 20px 20px 20px}
+        .msg.bot .msg-bubble strong{color:var(--pt)}
+        .msg.bot .msg-bubble code{background:var(--b4);padding:2px 6px;border-radius:4px;font-size:12px;color:var(--pt);font-family:monospace}
+        .msg-footer{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t4);padding:0 6px;flex-wrap:wrap}
+        .msg.user .msg-footer{justify-content:flex-end}
+        .source-tag{font-size:10px;background:var(--ps);color:var(--pt);padding:2px 10px;border-radius:999px;border:1px solid var(--pg)}
+
+        /* TYPING */
+        .typing{display:flex;gap:5px;align-items:center;padding:4px 0}
+        .typing span{width:8px;height:8px;background:var(--p);border-radius:50%;animation:dotBounce 1.4s infinite ease-in-out;opacity:.5}
+        .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+        @keyframes dotBounce{0%,80%,100%{transform:scale(1);opacity:.4}40%{transform:scale(1.3);opacity:1}}
+        .streaming::after{content:'▋';animation:blink .7s infinite;color:var(--p);margin-left:2px}
+        @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+        /* INPUT AREA */
+        .input-area{flex-shrink:0;padding:0 24px 24px;background:var(--b0);z-index:10}
+        .input-box{max-width:760px;margin:0 auto;background:var(--b2);border:1.5px solid var(--br2);border-radius:16px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+        .input-box:focus-within{border-color:var(--pg);box-shadow:0 0 0 4px rgba(124,58,237,.06),0 8px 32px rgba(0,0,0,.2)}
+
+        /* FILTER ROW */
+        .filter-section{padding:12px 16px 8px;border-bottom:1px solid var(--br);display:flex;flex-direction:column;gap:8px}
+        .filter-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .filter-row .label{font-size:11px;color:var(--t4);font-weight:600;min-width:60px;display:flex;align-items:center;gap:5px}
+        .filter-row .label i{font-size:10px}
+        .filter-pills{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+        .fpill{padding:4px 12px;border-radius:999px;font-size:11px;font-weight:500;cursor:pointer;background:var(--b4);color:var(--t3);border:1px solid transparent;transition:all .15s;white-space:nowrap;user-select:none}
+        .fpill:hover{background:var(--b5);color:var(--t2)}
+        .fpill.active{background:var(--ps);color:var(--pt);border-color:var(--pg)}
+        .fpill .pill-count{font-size:9px;background:rgba(255,255,255,.08);padding:1px 5px;border-radius:99px;margin-left:4px}
+        .fpill.active .pill-count{background:var(--pg)}
+
+        .type-row{display:flex;align-items:flex-end;gap:12px;padding:12px 16px}
+        .type-row textarea{flex:1;background:transparent;border:none;outline:none;color:var(--t1);font-size:15px;resize:none;max-height:140px;line-height:1.55;font-family:inherit;min-height:24px}
+        .type-row textarea::placeholder{color:var(--t4)}
+        .type-row textarea:disabled{opacity:.4}
+        .send-btn{width:42px;height:42px;background:linear-gradient(135deg,var(--p),#a855f7);border:none;border-radius:12px;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;box-shadow:0 4px 16px rgba(124,58,237,.35)}
+        .send-btn:hover:not(:disabled){transform:translateY(-2px) scale(1.05);box-shadow:0 6px 24px rgba(124,58,237,.45)}
+        .send-btn:active:not(:disabled){transform:scale(.95)}
+        .send-btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+        .bottom-row{display:flex;justify-content:space-between;align-items:center;padding:4px 16px 10px;font-size:11px;color:var(--t4)}
+
+        /* ACTIVE FILTERS DISPLAY */
+        .active-filters{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--t3);padding:0 4px}
+        .active-filter-tag{background:var(--ps);color:var(--pt);padding:2px 8px;border-radius:99px;font-size:10px;border:1px solid var(--pg);display:inline-flex;align-items:center;gap:4px}
+        .active-filter-tag i{font-size:8px}
+
+        /* TOAST */
+        .toast-box{position:fixed;bottom:20px;right:20px;z-index:99999;display:flex;flex-direction:column;gap:8px}
+        .toast{display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--b2);border:1px solid var(--br2);border-radius:12px;font-size:13px;max-width:320px;box-shadow:0 12px 40px rgba(0,0,0,.4);animation:toastIn .3s cubic-bezier(.16,1,.3,1)}
+        .toast.success{border-left:3px solid var(--ok)}.toast.error{border-left:3px solid var(--err)}.toast.warning{border-left:3px solid var(--warn)}.toast.info{border-left:3px solid #60a5fa}
+        @keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+
+        @media(max-width:640px){
+            .topbar{padding:12px 16px}
+            .messages{padding:0 12px 20px}
+            .msg.user{padding-left:20px}.msg.bot{padding-right:20px}
+            .input-area{padding:0 12px 16px}
+            .welcome{padding:30px 16px 24px}
+            .welcome-icon{width:64px;height:64px;font-size:28px;border-radius:20px}
+            .welcome h2{font-size:22px}
+            .filter-row{flex-wrap:wrap}
+            .filter-row .label{min-width:auto}
         }
     </style>
 </head>
 <body>
 
-    <div class="app">
-
-        <!-- TOPBAR -->
-        <div class="topbar">
-            <div class="topbar-left">
-                <div class="avatar">
-                    <i class="fas fa-robot"></i>
-                    <div class="dot" id="dot"></div>
-                </div>
-                <div class="info">
-                    <h1 id="botTitle">TranscriptBot</h1>
-                    <span id="statusText">Starting up...</span>
-                </div>
-            </div>
-            <div class="topbar-right">
-                <div class="pills" id="pills"></div>
-                <div class="model-box">
-                    <i class="fas fa-microchip"></i>
-                    <select id="modelPicker">
-                        <option value="gpt-4o-mini" selected>GPT-4o Mini</option>
-                        <option value="gpt-4o">GPT-4o</option>
-                        <option value="claude-3-5-sonnet">Claude 3.5</option>
-                        <option value="gemini-2.0-flash">Gemini 2.0</option>
-                    </select>
-                </div>
-            </div>
+<div class="app">
+    <div class="topbar">
+        <div class="topbar-left">
+            <div class="avatar"><i class="fas fa-robot"></i><div class="dot" id="dot"></div></div>
+            <div class="info"><h1 id="botTitle">TranscriptBot</h1><span id="statusText">Starting up...</span></div>
         </div>
-
-        <!-- CHAT -->
-        <div class="chat-area" id="chatArea">
-            <div class="welcome" id="welcome">
-                <div class="welcome-icon"><i class="fas fa-robot"></i></div>
-                <h2>Hi! I'm TranscriptBot 👋</h2>
-                <p>Ask me anything about the video content. I'll search through the transcripts to find answers.</p>
-                <div class="suggestions" id="suggestions"></div>
-            </div>
-            <div class="messages" id="messages"></div>
-        </div>
-
-        <!-- INPUT -->
-        <div class="input-area">
-            <div class="input-box">
-                <div class="filter-row" id="filterRow" style="display:none">
-                    <span class="label"><i class="fas fa-filter"></i> Topic:</span>
-                    <div class="filter-pills" id="filterPills"></div>
-                </div>
-                <div class="type-row">
-                    <textarea id="input" placeholder="Loading..." rows="1" disabled></textarea>
-                    <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
-                </div>
-                <div class="bottom-row">
-                    <span id="bottomStatus"><i class="fas fa-spinner fa-spin"></i> Connecting...</span>
-                    <span id="charNum"></span>
-                </div>
+        <div class="topbar-right">
+            <div class="model-box"><i class="fas fa-microchip"></i>
+                <select id="modelPicker">
+                    <option value="gpt-4o-mini" selected>GPT-4o Mini</option>
+                    <option value="gpt-4o">GPT-4o</option>
+                    <option value="claude-3-5-sonnet">Claude 3.5</option>
+                    <option value="gemini-2.0-flash">Gemini 2.0</option>
+                </select>
             </div>
         </div>
     </div>
 
-    <div class="toast-box" id="toastBox"></div>
+    <div class="chat-area" id="chatArea">
+        <div class="welcome" id="welcome">
+            <div class="welcome-icon"><i class="fas fa-robot"></i></div>
+            <h2 id="welcomeH">Hi! I'm TranscriptBot 👋</h2>
+            <p id="welcomeP">Ask me anything about the video content. I'll search through the transcripts to find answers.</p>
+            <div class="suggestions" id="suggestions"></div>
+        </div>
+        <div class="messages" id="messages"></div>
+    </div>
 
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-    (function() {
-        'use strict';
+    <div class="input-area">
+        <div class="input-box">
+            <div class="filter-section" id="filterSection">
+                <div class="filter-row" id="catFilterRow">
+                    <span class="label"><i class="fas fa-folder"></i> Category:</span>
+                    <div class="filter-pills" id="catPills"></div>
+                </div>
+                <div class="filter-row" id="videoFilterRow" style="display:none">
+                    <span class="label"><i class="fas fa-file-alt"></i> Video:</span>
+                    <div class="filter-pills" id="videoPills"></div>
+                </div>
+            </div>
+            <div class="type-row">
+                <textarea id="input" placeholder="Loading..." rows="1" disabled></textarea>
+                <button class="send-btn" id="sendBtn" disabled><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div class="bottom-row">
+                <div class="active-filters" id="activeFilters"></div>
+                <span id="bottomStatus"><i class="fas fa-spinner fa-spin"></i> Connecting...</span>
+            </div>
+        </div>
+    </div>
+</div>
 
-        // ── STATE ──
-        var state = {
-            data: null,
-            settings: {},
-            cat: 'all',
-            history: [],
-            busy: false,
-            ready: false
-        };
+<div class="toast-box" id="toastBox"></div>
 
-        // ── DOM ──
-        var $ = function(id) { return document.getElementById(id); };
-        var dom = {
-            dot:         $('dot'),
-            botTitle:    $('botTitle'),
-            statusText:  $('statusText'),
-            pills:       $('pills'),
-            filterRow:   $('filterRow'),
-            filterPills: $('filterPills'),
-            modelPicker: $('modelPicker'),
-            chatArea:    $('chatArea'),
-            welcome:     $('welcome'),
-            suggestions: $('suggestions'),
-            messages:    $('messages'),
-            input:       $('input'),
-            sendBtn:     $('sendBtn'),
-            bottomStatus:$('bottomStatus'),
-            charNum:     $('charNum'),
-            toastBox:    $('toastBox')
-        };
+<script src="https://js.puter.com/v2/"></script>
+<script>
+(function() {
+    "use strict";
 
-        // ── TOAST ──
-        function toast(msg, type) {
-            type = type || 'info';
-            var icons = { success:'fa-check-circle', error:'fa-times-circle', warning:'fa-exclamation-triangle', info:'fa-info-circle' };
-            var el = document.createElement('div');
-            el.className = 'toast ' + type;
-            el.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + '"></i> ' + msg;
-            dom.toastBox.appendChild(el);
-            setTimeout(function() { el.style.opacity='0'; el.style.transition='.3s'; setTimeout(function(){ el.remove(); }, 300); }, 3000);
-        }
+    var state = {
+        data: null,
+        settings: {},
+        selectedCat: "all",
+        selectedVideo: "all",
+        history: [],
+        busy: false,
+        ready: false
+    };
 
-        // ── HELPERS ──
-        function formatCat(c) { return c.replace(/_/g,' ').replace(/\b\w/g, function(x){ return x.toUpperCase(); }); }
-        function time() { return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); }
-        function scroll() { dom.chatArea.scrollTop = dom.chatArea.scrollHeight; }
+    function el(id) { return document.getElementById(id); }
 
-        function fmt(t) {
-            return String(t||'')
-                .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-                .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g,'<em>$1</em>')
-                .replace(/`([^`]+)`/g,'<code>$1</code>')
-                .replace(/\n/g,'<br>');
-        }
+    var dom = {
+        dot: el("dot"),
+        botTitle: el("botTitle"),
+        statusText: el("statusText"),
+        catPills: el("catPills"),
+        videoPills: el("videoPills"),
+        videoFilterRow: el("videoFilterRow"),
+        filterSection: el("filterSection"),
+        activeFilters: el("activeFilters"),
+        modelPicker: el("modelPicker"),
+        chatArea: el("chatArea"),
+        welcome: el("welcome"),
+        welcomeH: el("welcomeH"),
+        welcomeP: el("welcomeP"),
+        suggestions: el("suggestions"),
+        messages: el("messages"),
+        input: el("input"),
+        sendBtn: el("sendBtn"),
+        bottomStatus: el("bottomStatus"),
+        toastBox: el("toastBox")
+    };
 
-        function setOnline(yes) {
-            dom.dot.className = yes ? 'dot online' : 'dot';
-        }
+    // ── HELPERS ──
+    function toast(msg, type) {
+        type = type || "info";
+        var icons = {success:"fa-check-circle",error:"fa-times-circle",warning:"fa-exclamation-triangle",info:"fa-info-circle"};
+        var d = document.createElement("div");
+        d.className = "toast " + type;
+        d.innerHTML = '<i class="fas ' + (icons[type]||icons.info) + '"></i> ' + msg;
+        dom.toastBox.appendChild(d);
+        setTimeout(function(){ d.style.opacity="0"; d.style.transition=".3s"; setTimeout(function(){ d.remove(); },300); },3000);
+    }
 
-        function enableInput() {
-            dom.input.disabled = false;
-            dom.sendBtn.disabled = false;
-            dom.input.placeholder = 'Ask a question about the transcripts...';
-        }
+    function formatCat(c) { return c.replace(/_/g," ").replace(/\b\w/g, function(x){ return x.toUpperCase(); }); }
+    function time() { return new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}); }
+    function scrollDown() { dom.chatArea.scrollTop = dom.chatArea.scrollHeight; }
 
-        function disableInput(msg) {
-            dom.input.disabled = true;
-            dom.sendBtn.disabled = true;
-            dom.input.placeholder = msg || 'Please wait...';
-        }
+    function fmt(t) {
+        return String(t||"")
+            .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+            .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
+            .replace(/\*(.*?)\*/g,"<em>$1</em>")
+            .replace(/`([^`]+)`/g,"<code>$1</code>")
+            .replace(/\n/g,"<br>");
+    }
 
-        // ── DATA LOADING ──
-        function loadLocal() {
-            try {
-                var raw = localStorage.getItem('tb_export') || localStorage.getItem('tb_admin_db');
-                if (!raw) return null;
-                var d = JSON.parse(raw);
+    function setOnline(yes) { dom.dot.className = yes ? "dot online" : "dot"; }
+    function enableInput() { dom.input.disabled=false; dom.sendBtn.disabled=false; dom.input.placeholder="Ask a question about the transcripts..."; }
+    function disableInput(msg) { dom.input.disabled=true; dom.sendBtn.disabled=true; dom.input.placeholder=msg||"Please wait..."; }
+
+    function sleep(ms) { return new Promise(function(r){ setTimeout(r,ms); }); }
+
+    // ── DATA ──
+    function loadLocal() {
+        try {
+            var raw = localStorage.getItem("tb_export") || localStorage.getItem("tb_admin_db");
+            if (!raw) return null;
+            var d = JSON.parse(raw);
+            if (d && d.categories && Object.keys(d.categories).length > 0) return d;
+            return null;
+        } catch(e) { return null; }
+    }
+
+    function loadURL(url) {
+        return fetch(url + "?t=" + Date.now(), {cache:"no-cache"})
+            .then(function(r){ return r.ok ? r.json() : null; })
+            .then(function(d){
                 if (d && d.categories && Object.keys(d.categories).length > 0) return d;
                 return null;
-            } catch(e) { return null; }
+            })
+            .catch(function(){ return null; });
+    }
+
+    async function loadData() {
+        var d = loadLocal();
+        if (d) return d;
+        var url = localStorage.getItem("tb_raw_url");
+        if (url) { d = await loadURL(url); if (d) return d; }
+        d = await loadURL("./data/transcripts.json");
+        if (d) return d;
+        return null;
+    }
+
+    async function waitPuter(max) {
+        max = max || 12000; var t = 0;
+        while (t < max) {
+            if (typeof puter !== "undefined" && puter.ai && typeof puter.ai.chat === "function") return true;
+            await sleep(250); t += 250;
         }
+        return false;
+    }
 
-        function loadURL(url) {
-            return fetch(url + '?t=' + Date.now(), { cache:'no-cache' })
-                .then(function(r) { return r.ok ? r.json() : null; })
-                .then(function(d) {
-                    if (d && d.categories && Object.keys(d.categories).length > 0) return d;
-                    return null;
-                })
-                .catch(function() { return null; });
-        }
+    // ── CATEGORY & VIDEO FILTERS ──
+    function buildCatPills() {
+        dom.catPills.innerHTML = "";
+        var cats = Object.keys(state.data.categories);
 
-        async function loadData() {
-            var d = loadLocal();
-            if (d) return d;
+        addPill("all", "All", countAllFiles(), dom.catPills, function() {
+            state.selectedCat = "all";
+            state.selectedVideo = "all";
+            markActivePills(dom.catPills, "all");
+            buildVideoPills();
+            updateActiveFilters();
+        });
 
-            var url = localStorage.getItem('tb_raw_url');
-            if (url) {
-                d = await loadURL(url);
-                if (d) return d;
-            }
-
-            d = await loadURL('./data/transcripts.json');
-            if (d) return d;
-
-            return null;
-        }
-
-        // ── PUTER WAIT ──
-        async function waitPuter(max) {
-            max = max || 12000;
-            var t = 0;
-            while (t < max) {
-                if (typeof puter !== 'undefined' && puter.ai && typeof puter.ai.chat === 'function') return true;
-                await new Promise(function(r){ setTimeout(r, 250); });
-                t += 250;
-            }
-            return false;
-        }
-
-        // ── BUILD UI ──
-        function buildPills() {
-            dom.pills.innerHTML = '';
-            dom.filterPills.innerHTML = '';
-            var cats = Object.keys(state.data.categories);
-            if (cats.length === 0) return;
-
-            function addPill(id, label, container, cls) {
-                var d = document.createElement('div');
-                d.className = cls;
-                d.textContent = label;
-                d.setAttribute('data-id', id);
-                d.addEventListener('click', function() {
-                    state.cat = id;
-                    container.querySelectorAll('.' + cls.split(' ')[0]).forEach(function(el) {
-                        el.classList.toggle('active', el.getAttribute('data-id') === id);
-                    });
-                    // Sync both
-                    dom.pills.querySelectorAll('.pill').forEach(function(el) {
-                        el.classList.toggle('active', el.getAttribute('data-id') === id);
-                    });
-                    dom.filterPills.querySelectorAll('.fpill').forEach(function(el) {
-                        el.classList.toggle('active', el.getAttribute('data-id') === id);
-                    });
-                });
-                container.appendChild(d);
-                return d;
-            }
-
-            addPill('all', 'All', dom.pills, 'pill active');
-            addPill('all', 'All', dom.filterPills, 'fpill active');
-
-            cats.forEach(function(cat) {
-                var label = formatCat(cat);
-                addPill(cat, label, dom.pills, 'pill');
-                addPill(cat, label, dom.filterPills, 'fpill');
+        cats.forEach(function(cat) {
+            var count = state.data.categories[cat].length;
+            addPill(cat, formatCat(cat), count, dom.catPills, function() {
+                state.selectedCat = cat;
+                state.selectedVideo = "all";
+                markActivePills(dom.catPills, cat);
+                buildVideoPills();
+                updateActiveFilters();
             });
+        });
 
-            if (cats.length > 1) {
-                dom.filterRow.style.display = 'flex';
-            }
+        markActivePills(dom.catPills, "all");
+        buildVideoPills();
+    }
+
+    function buildVideoPills() {
+        dom.videoPills.innerHTML = "";
+
+        var files = getFilesForCategory(state.selectedCat);
+
+        if (files.length <= 1) {
+            dom.videoFilterRow.style.display = "none";
+            return;
         }
 
-        function buildSuggestions() {
-            dom.suggestions.innerHTML = '';
-            var sugs = (state.settings.suggestions && state.settings.suggestions.length)
-                ? state.settings.suggestions
-                : ['What topics are covered?', 'Summarize the main points', 'What are the key takeaways?'];
+        dom.videoFilterRow.style.display = "flex";
 
-            sugs.slice(0, 4).forEach(function(s) {
-                var chip = document.createElement('div');
-                chip.className = 'sug-chip';
-                chip.textContent = s;
-                chip.addEventListener('click', function() {
-                    dom.input.value = s;
-                    send();
-                });
-                dom.suggestions.appendChild(chip);
+        addPill("all", "All Videos", files.length, dom.videoPills, function() {
+            state.selectedVideo = "all";
+            markActivePills(dom.videoPills, "all");
+            updateActiveFilters();
+        });
+
+        files.forEach(function(file) {
+            var displayName = file.name.replace(/\.(txt|pdf)$/i, "").replace(/_/g, " ");
+            var chunkCount = file.chunks ? file.chunks.length : 0;
+            addPill(file.name, displayName, chunkCount, dom.videoPills, function() {
+                state.selectedVideo = file.name;
+                markActivePills(dom.videoPills, file.name);
+                updateActiveFilters();
             });
+        });
+
+        markActivePills(dom.videoPills, "all");
+    }
+
+    function addPill(id, label, count, container, onClick) {
+        var d = document.createElement("div");
+        d.className = "fpill";
+        d.setAttribute("data-id", id);
+        d.innerHTML = label + '<span class="pill-count">' + count + '</span>';
+        d.addEventListener("click", onClick);
+        container.appendChild(d);
+    }
+
+    function markActivePills(container, activeId) {
+        var pills = container.querySelectorAll(".fpill");
+        for (var i = 0; i < pills.length; i++) {
+            var isActive = pills[i].getAttribute("data-id") === activeId;
+            pills[i].classList.toggle("active", isActive);
         }
+    }
 
-        function applySettings() {
-            var s = state.settings;
-            if (s.botName) {
-                dom.botTitle.textContent = s.botName;
-                document.title = s.botName;
-            }
-            if (s.defaultModel) {
-                var opt = dom.modelPicker.querySelector('option[value="' + s.defaultModel + '"]');
-                if (opt) opt.selected = true;
-            }
-        }
-
-        // ── SEARCH ──
-        function tokenize(t) {
-            return String(t).toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(function(w){ return w.length > 2; });
-        }
-
-        function score(chunk, query) {
-            var ct = tokenize(chunk);
-            var qt = tokenize(query);
-            var cs = new Set(ct);
-            var s = 0;
-            if (chunk.toLowerCase().indexOf(query.toLowerCase()) !== -1) s += 15;
-            qt.forEach(function(q) { if (cs.has(q)) s += 3; });
-            return s;
-        }
-
-        function search(query) {
-            var topK = parseInt(state.settings.topK) || 5;
-            var cats = state.cat === 'all' ? Object.keys(state.data.categories) : [state.cat];
-            var results = [];
-
-            cats.forEach(function(cat) {
-                var files = state.data.categories[cat] || [];
-                files.forEach(function(file) {
-                    (file.chunks || []).forEach(function(chunk) {
-                        var sc = score(chunk, query);
-                        if (sc > 0) results.push({ chunk: chunk, score: sc, cat: cat, file: file.name });
-                    });
-                });
-            });
-
-            results.sort(function(a, b) { return b.score - a.score; });
-            return results.slice(0, topK);
-        }
-
-        // ── MESSAGES ──
-        function addMsg(role, content, isStreaming) {
-            dom.welcome.style.display = 'none';
-            var wrap = document.createElement('div');
-            wrap.className = 'msg ' + role;
-            var icon = role === 'user' ? 'fa-user' : 'fa-robot';
-
-            if (isStreaming) {
-                wrap.innerHTML =
-                    '<div class="msg-avatar"><i class="fas ' + icon + '"></i></div>' +
-                    '<div class="msg-body">' +
-                        '<div class="msg-bubble streaming"><div class="typing"><span></span><span></span><span></span></div></div>' +
-                        '<div class="msg-footer"><span>' + time() + '</span></div>' +
-                    '</div>';
-            } else {
-                wrap.innerHTML =
-                    '<div class="msg-avatar"><i class="fas ' + icon + '"></i></div>' +
-                    '<div class="msg-body">' +
-                        '<div class="msg-bubble">' + fmt(content) + '</div>' +
-                        '<div class="msg-footer"><span>' + time() + '</span></div>' +
-                    '</div>';
-            }
-
-            dom.messages.appendChild(wrap);
-            scroll();
-            return wrap;
-        }
-
-        // ── SEND ──
-        async function send() {
-            var text = dom.input.value.trim();
-            if (!text || state.busy) return;
-
-            if (typeof puter === 'undefined' || !puter.ai) {
-                toast('AI not ready yet, please wait...', 'warning');
-                return;
-            }
-
-            state.busy = true;
-            dom.sendBtn.disabled = true;
-            dom.input.value = '';
-            dom.input.style.height = 'auto';
-            if (dom.charNum) dom.charNum.textContent = '';
-
-            addMsg('user', text);
-            state.history.push({ role: 'user', content: text });
-
-            var chunks = search(text);
-            var hasCtx = chunks.length > 0;
-
-            var ctx = hasCtx
-                ? chunks.map(function(r) {
-                    return '[' + formatCat(r.cat) + ' / ' + r.file + ']\n' + r.chunk;
-                }).join('\n\n---\n\n')
-                : 'No relevant content found in transcripts.';
-
-            var sysPrompt = 'You are a helpful assistant answering questions based ONLY on video transcript content.\n\n' +
-                'RULES:\n1. Only use the transcripts below.\n2. If not found, say "I couldn\'t find that in the transcripts."\n3. Be concise.\n\n' +
-                'TRANSCRIPTS:\n' + ctx;
-
-            var msgs = [{ role: 'system', content: sysPrompt }];
-            state.history.slice(-8).forEach(function(m) { msgs.push(m); });
-
-            var model = dom.modelPicker.value || 'gpt-4o-mini';
-            var botEl = addMsg('bot', '', true);
-            var bubEl = botEl.querySelector('.msg-bubble');
-            var footEl = botEl.querySelector('.msg-footer');
-            var full = '';
-
-            try {
-                var stream = await puter.ai.chat(msgs, { model: model, stream: true });
-                bubEl.innerHTML = '';
-                bubEl.classList.add('streaming');
-
-                for await (var part of stream) {
-                    var token = (part && part.text) ? part.text : '';
-                    full += token;
-                    bubEl.innerHTML = fmt(full);
-                    scroll();
+    function getFilesForCategory(cat) {
+        if (cat === "all") {
+            var all = [];
+            var keys = Object.keys(state.data.categories);
+            for (var i = 0; i < keys.length; i++) {
+                var files = state.data.categories[keys[i]];
+                for (var j = 0; j < files.length; j++) {
+                    all.push(files[j]);
                 }
-
-                bubEl.classList.remove('streaming');
-
-                if (hasCtx) {
-                    var seen = {};
-                    chunks.slice(0, 3).forEach(function(c) {
-                        var key = formatCat(c.cat) + ' › ' + c.file;
-                        if (!seen[key]) {
-                            seen[key] = true;
-                            var tag = document.createElement('span');
-                            tag.className = 'source-tag';
-                            tag.textContent = '📄 ' + key;
-                            footEl.appendChild(tag);
-                        }
-                    });
-                }
-
-                state.history.push({ role: 'assistant', content: full });
-
-            } catch(err) {
-                bubEl.classList.remove('streaming');
-                bubEl.innerHTML = '<span style="color:var(--error)">⚠ ' + (err.message || 'Error occurred') + '</span>';
-                console.error(err);
             }
-
-            state.busy = false;
-            dom.sendBtn.disabled = false;
-            dom.input.focus();
+            return all;
         }
+        return state.data.categories[cat] || [];
+    }
 
-        // ── EVENTS ──
-        dom.sendBtn.addEventListener('click', send);
+    function countAllFiles() {
+        var count = 0;
+        var keys = Object.keys(state.data.categories);
+        for (var i = 0; i < keys.length; i++) {
+            count += state.data.categories[keys[i]].length;
+        }
+        return count;
+    }
 
-        dom.input.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
+    function updateActiveFilters() {
+        var html = "";
+        if (state.selectedCat !== "all") {
+            html += '<span class="active-filter-tag"><i class="fas fa-folder"></i> ' + formatCat(state.selectedCat) + '</span>';
+        }
+        if (state.selectedVideo !== "all") {
+            var name = state.selectedVideo.replace(/\.(txt|pdf)$/i, "").replace(/_/g, " ");
+            html += '<span class="active-filter-tag"><i class="fas fa-file-alt"></i> ' + name + '</span>';
+        }
+        if (!html) {
+            html = '<span style="font-size:11px;color:var(--t4)"><i class="fas fa-globe" style="margin-right:4px"></i> Searching all transcripts</span>';
+        }
+        dom.activeFilters.innerHTML = html;
+    }
+
+    // ── SUGGESTIONS ──
+    function buildSuggestions() {
+        dom.suggestions.innerHTML = "";
+        var sugs = (state.settings.suggestions && state.settings.suggestions.length)
+            ? state.settings.suggestions
+            : ["What topics are covered?", "Summarize the main points", "What are the key takeaways?"];
+        sugs.slice(0,4).forEach(function(s) {
+            var chip = document.createElement("div");
+            chip.className = "sug-chip";
+            chip.textContent = s;
+            chip.addEventListener("click", function() {
+                dom.input.value = s;
                 send();
+            });
+            dom.suggestions.appendChild(chip);
+        });
+    }
+
+    function applySettings() {
+        var s = state.settings;
+        if (s.botName) { dom.botTitle.textContent = s.botName; document.title = s.botName; }
+        if (s.welcome) { dom.welcomeP.textContent = s.welcome; }
+        if (s.defaultModel) {
+            var opt = dom.modelPicker.querySelector('option[value="' + s.defaultModel + '"]');
+            if (opt) opt.selected = true;
+        }
+    }
+
+    // ── SEARCH ──
+    function tokenize(t) {
+        return String(t).toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(function(w){ return w.length>2; });
+    }
+
+    function score(chunk, query) {
+        var ct = tokenize(chunk);
+        var qt = tokenize(query);
+        var cs = new Set(ct);
+        var s = 0;
+        if (chunk.toLowerCase().indexOf(query.toLowerCase()) !== -1) s += 15;
+        qt.forEach(function(q) { if (cs.has(q)) s += 3; });
+        return s;
+    }
+
+    function search(query) {
+        var topK = parseInt(state.settings.topK) || 5;
+        var cats = state.selectedCat === "all" ? Object.keys(state.data.categories) : [state.selectedCat];
+        var results = [];
+
+        cats.forEach(function(cat) {
+            var files = state.data.categories[cat] || [];
+            files.forEach(function(file) {
+                // Filter by selected video
+                if (state.selectedVideo !== "all" && file.name !== state.selectedVideo) return;
+
+                var chunks = file.chunks || [];
+                chunks.forEach(function(chunk) {
+                    var sc = score(chunk, query);
+                    if (sc > 0) results.push({chunk:chunk, score:sc, cat:cat, file:file.name});
+                });
+            });
+        });
+
+        results.sort(function(a,b){ return b.score - a.score; });
+        return results.slice(0, topK);
+    }
+
+    // ── MESSAGES ──
+    function addMsg(role, content, isStreaming) {
+        dom.welcome.style.display = "none";
+        var wrap = document.createElement("div");
+        wrap.className = "msg " + role;
+        var icon = role === "user" ? "fa-user" : "fa-robot";
+
+        if (isStreaming) {
+            wrap.innerHTML =
+                '<div class="msg-avatar"><i class="fas ' + icon + '"></i></div>' +
+                '<div class="msg-body">' +
+                    '<div class="msg-bubble streaming"><div class="typing"><span></span><span></span><span></span></div></div>' +
+                    '<div class="msg-footer"><span>' + time() + '</span></div>' +
+                '</div>';
+        } else {
+            wrap.innerHTML =
+                '<div class="msg-avatar"><i class="fas ' + icon + '"></i></div>' +
+                '<div class="msg-body">' +
+                    '<div class="msg-bubble">' + fmt(content) + '</div>' +
+                    '<div class="msg-footer"><span>' + time() + '</span></div>' +
+                '</div>';
+        }
+
+        dom.messages.appendChild(wrap);
+        scrollDown();
+        return wrap;
+    }
+
+    // ── SEND ──
+    async function send() {
+        var text = dom.input.value.trim();
+        if (!text || state.busy) return;
+        if (typeof puter === "undefined" || !puter.ai) { toast("AI not ready yet","warning"); return; }
+        if (!state.data) { toast("No data loaded","error"); return; }
+
+        state.busy = true;
+        dom.sendBtn.disabled = true;
+        dom.input.value = "";
+        dom.input.style.height = "auto";
+
+        addMsg("user", text);
+        state.history.push({role:"user",content:text});
+
+        var chunks = search(text);
+        var hasCtx = chunks.length > 0;
+        var ctx = hasCtx
+            ? chunks.map(function(r){ return "[" + formatCat(r.cat) + " / " + r.file.replace(/\.(txt|pdf)$/i,"") + "]\n" + r.chunk; }).join("\n\n---\n\n")
+            : "No relevant content found in transcripts.";
+
+        var sysPrompt = "You are a helpful assistant answering questions based ONLY on video transcript content.\n\n" +
+            "RULES:\n1. Only use the transcripts below.\n2. If not found, say \"I couldn't find that in the transcripts.\"\n3. Be concise.\n4. Mention the source when relevant.\n\n" +
+            "TRANSCRIPTS:\n" + ctx;
+
+        var msgs = [{role:"system",content:sysPrompt}];
+        var hist = state.history.slice(-8);
+        for (var i = 0; i < hist.length; i++) msgs.push(hist[i]);
+
+        var model = dom.modelPicker.value || "gpt-4o-mini";
+        var botEl = addMsg("bot","",true);
+        var bubEl = botEl.querySelector(".msg-bubble");
+        var footEl = botEl.querySelector(".msg-footer");
+        var full = "";
+
+        try {
+            var stream = await puter.ai.chat(msgs, {model:model, stream:true});
+            bubEl.innerHTML = "";
+            bubEl.classList.add("streaming");
+
+            for await (var part of stream) {
+                var token = (part && part.text) ? part.text : "";
+                full += token;
+                bubEl.innerHTML = fmt(full);
+                scrollDown();
+            }
+
+            bubEl.classList.remove("streaming");
+
+            if (hasCtx) {
+                var seen = {};
+                chunks.slice(0,3).forEach(function(c) {
+                    var key = formatCat(c.cat) + " > " + c.file.replace(/\.(txt|pdf)$/i,"");
+                    if (!seen[key]) {
+                        seen[key] = true;
+                        var tag = document.createElement("span");
+                        tag.className = "source-tag";
+                        tag.textContent = "\uD83D\uDCC4 " + key;
+                        footEl.appendChild(tag);
+                    }
+                });
+            }
+
+            state.history.push({role:"assistant",content:full});
+        } catch(err) {
+            bubEl.classList.remove("streaming");
+            bubEl.innerHTML = '<span style="color:var(--err)">\u26A0 ' + (err.message||"Error") + '</span>';
+        }
+
+        state.busy = false;
+        dom.sendBtn.disabled = false;
+        dom.input.focus();
+    }
+
+    // ── EVENTS ──
+    dom.sendBtn.addEventListener("click", send);
+    dom.input.addEventListener("keydown", function(e) {
+        if (e.key==="Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+    });
+    dom.input.addEventListener("input", function() {
+        dom.input.style.height = "auto";
+        dom.input.style.height = Math.min(dom.input.scrollHeight,140) + "px";
+    });
+
+    // ── BOOT ──
+    async function boot() {
+        dom.statusText.textContent = "Loading data...";
+        dom.bottomStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+
+        var data = await loadData();
+
+        if (!data) {
+            dom.statusText.textContent = "No transcripts found";
+            dom.bottomStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--warn)"></i> No data';
+            disableInput("No transcripts available yet");
+            dom.welcomeH.textContent = "No Content Yet";
+            dom.welcomeP.textContent = "The admin hasn't uploaded any transcripts yet.";
+            dom.suggestions.style.display = "none";
+            dom.filterSection.style.display = "none";
+            return;
+        }
+
+        state.data = data;
+        state.settings = data.settings || {};
+
+        var totalFiles = countAllFiles();
+        var totalCats = Object.keys(data.categories).length;
+        dom.statusText.textContent = totalFiles + " files \u00B7 " + totalCats + " categories";
+
+        applySettings();
+        buildCatPills();
+        buildSuggestions();
+        updateActiveFilters();
+
+        dom.bottomStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting to AI...';
+
+        waitPuter(15000).then(function(ok) {
+            state.ready = true;
+            enableInput();
+            setOnline(true);
+            if (ok) {
+                dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:8px"></i> Ready';
+            } else {
+                dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--warn);font-size:8px"></i> Connecting...';
             }
         });
 
-        dom.input.addEventListener('input', function() {
-            dom.input.style.height = 'auto';
-            dom.input.style.height = Math.min(dom.input.scrollHeight, 140) + 'px';
-            dom.charNum.textContent = dom.input.value.length || '';
-        });
-
-        // ── BOOT ──
-        async function boot() {
-            dom.statusText.textContent = 'Loading data...';
-            dom.bottomStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-
-            var data = await loadData();
-
-            if (!data) {
-                dom.statusText.textContent = 'No transcripts found';
-                dom.bottomStatus.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--warning)"></i> No data — admin needs to upload transcripts';
-                disableInput('No transcripts available yet');
-                dom.welcome.querySelector('h2').textContent = 'No Content Yet';
-                dom.welcome.querySelector('p').textContent = 'The admin hasn\'t uploaded any transcripts yet. Please check back later!';
-                dom.suggestions.style.display = 'none';
-                return;
-            }
-
-            state.data = data;
-            state.settings = data.settings || {};
-
-            var totalFiles = Object.values(data.categories).reduce(function(s,f){ return s + f.length; }, 0);
-            var totalCats = Object.keys(data.categories).length;
-
-            dom.statusText.textContent = totalFiles + ' files · ' + totalCats + ' categories';
-            dom.bottomStatus.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting to AI...';
-
-            applySettings();
-            buildPills();
-            buildSuggestions();
-
-            // Wait for puter in background
-            waitPuter(15000).then(function(ok) {
+        setTimeout(function() {
+            if (!state.ready) {
                 state.ready = true;
                 enableInput();
                 setOnline(true);
-                if (ok) {
-                    dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--success);font-size:8px"></i> Ready · Powered by Puter.js';
-                } else {
-                    dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--warning);font-size:8px"></i> AI connecting...';
-                }
-            });
+                dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:8px"></i> Ready';
+            }
+        }, 3000);
+    }
 
-            // Fallback: enable after 3s no matter what
-            setTimeout(function() {
-                if (!state.ready) {
-                    state.ready = true;
-                    enableInput();
-                    setOnline(true);
-                    dom.bottomStatus.innerHTML = '<i class="fas fa-circle" style="color:var(--success);font-size:8px"></i> Ready';
-                }
-            }, 3000);
-        }
-
-        boot();
-    })();
-    </script>
+    boot();
+})();
+</script>
 </body>
 </html>
