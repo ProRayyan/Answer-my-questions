@@ -1,377 +1,440 @@
 'use strict';
 
-// ── STATE ──────────────────────────────────────────────────
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
 const U = {
     data:     null,
     settings: {},
     selected: 'all',
     history:  [],
     loading:  false,
+    ready:    false,   // puter ready flag
 };
 
-// ── DOM ────────────────────────────────────────────────────
-const g  = id => document.getElementById(id);
+// ─────────────────────────────────────────
+//  DOM
+// ─────────────────────────────────────────
+function g(id) { return document.getElementById(id); }
+
 const UD = {
-    loadScreen:    g('loadingScreen'),
-    loadFill:      g('loadingFill'),
-    userApp:       g('userApp'),
-    noData:        g('noDataScreen'),
     topbarStatus:  g('topbarStatus'),
+    statusDot:     g('statusDot'),
+    botName:       g('botName'),
     categoryPills: g('categoryPills'),
     filterChips:   g('filterChips'),
     catSelRow:     g('categorySelectRow'),
     modelSelect:   g('modelSelect'),
     userChat:      g('userChat'),
     welcomeBlock:  g('welcomeBlock'),
+    welcomeTitle:  g('welcomeTitle'),
+    welcomeSub:    g('welcomeSubtitle'),
     suggChips:     g('suggestionChips'),
     msgList:       g('messagesList'),
     msgInput:      g('msgInput'),
     sendBtn:       g('sendBtn'),
     charCount:     g('charCount'),
+    statusLabel:   g('statusLabel'),
     toastWrap:     g('toastWrap'),
 };
 
-// ── HELPERS ────────────────────────────────────────────────
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-function setProgress(pct) {
-    if (UD.loadFill) UD.loadFill.style.width = pct + '%';
-}
-
-function toast(msg, type = 'info', dur = 3500) {
-    if (!UD.toastWrap) return;
-    const icons = {
+// ─────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────
+function toast(msg, type, dur) {
+    type = type || 'info';
+    dur  = dur  || 3000;
+    var icons = {
         success: 'fa-check-circle',
         error:   'fa-times-circle',
         warning: 'fa-exclamation-triangle',
-        info:    'fa-info-circle',
+        info:    'fa-info-circle'
     };
-    const t = document.createElement('div');
-    t.className = `toast ${type}`;
-    t.innerHTML = `<i class="fas ${icons[type] || icons.info}"></i> ${msg}`;
-    UD.toastWrap.appendChild(t);
-    setTimeout(() => {
-        t.style.opacity    = '0';
+    var t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.innerHTML = '<i class="fas ' + (icons[type] || icons.info) + '"></i> ' + msg;
+    if (UD.toastWrap) UD.toastWrap.appendChild(t);
+    setTimeout(function() {
+        t.style.opacity = '0';
         t.style.transition = '.3s';
-        setTimeout(() => t.remove(), 300);
+        setTimeout(function() { t.remove(); }, 300);
     }, dur);
 }
 
-function formatCatName(cat) {
-    return cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+function setStatus(msg, ready) {
+    if (UD.topbarStatus) UD.topbarStatus.textContent = msg;
+    if (UD.statusLabel) {
+        if (ready) {
+            UD.statusLabel.innerHTML = '<i class="fas fa-circle" style="color:var(--success);font-size:8px"></i> Ready';
+        } else {
+            UD.statusLabel.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + msg;
+        }
+    }
+    if (UD.statusDot) {
+        UD.statusDot.style.background = ready ? 'var(--success)' : 'var(--warning)';
+    }
 }
 
-function formatBytes(b) {
-    if (!b || b < 1024) return (b || 0) + ' B';
-    if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
-    return (b / 1048576).toFixed(1) + ' MB';
+function enableInput() {
+    if (UD.sendBtn)  UD.sendBtn.disabled  = false;
+    if (UD.msgInput) UD.msgInput.disabled = false;
+    if (UD.msgInput) UD.msgInput.placeholder = 'Ask a question about the transcripts...';
+}
+
+function disableInput(msg) {
+    if (UD.sendBtn)  UD.sendBtn.disabled  = true;
+    if (UD.msgInput) UD.msgInput.disabled = true;
+    if (UD.msgInput) UD.msgInput.placeholder = msg || 'Please wait...';
 }
 
 function fmt(text) {
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        .replace(/`([^`]+)`/g, '<code>$1</code>')
-        .replace(/\n/g, '<br>');
+    return String(text || '')
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<em>$1</em>')
+        .replace(/`([^`]+)`/g,'<code>$1</code>')
+        .replace(/\n/g,'<br>');
 }
 
 function ts() {
-    return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+}
+
+function formatCat(cat) {
+    return cat.replace(/_/g,' ').replace(/\b\w/g, function(c){ return c.toUpperCase(); });
 }
 
 function scrollDown() {
     if (UD.userChat) UD.userChat.scrollTop = UD.userChat.scrollHeight;
 }
 
-// ── BOOT ───────────────────────────────────────────────────
-async function boot() {
-    setProgress(15);
+function sleep(ms) { return new Promise(function(r){ setTimeout(r, ms); }); }
 
-    let data = null;
+// ─────────────────────────────────────────
+//  DATA LOADING
+// ─────────────────────────────────────────
+function loadFromLocalStorage() {
+    try {
+        // Try both keys that admin.js writes to
+        var raw = localStorage.getItem('tb_export') || localStorage.getItem('tb_admin_db');
+        if (!raw) return null;
+        var d = JSON.parse(raw);
+        if (d && d.categories && Object.keys(d.categories).length > 0) {
+            return d;
+        }
+        return null;
+    } catch(e) {
+        return null;
+    }
+}
 
-    // 1. Try localStorage first (set by admin on same device)
-    data = tryLocalStorage();
-    if (data) {
-        setProgress(60);
-        console.log('Loaded from localStorage');
+async function loadFromURL(url) {
+    try {
+        var res = await fetch(url + '?nocache=' + Date.now());
+        if (!res.ok) return null;
+        var d = await res.json();
+        if (d && d.categories && Object.keys(d.categories).length > 0) {
+            return d;
+        }
+        return null;
+    } catch(e) {
+        return null;
+    }
+}
+
+async function loadData() {
+    // 1. localStorage (same browser as admin — works instantly)
+    var d = loadFromLocalStorage();
+    if (d) {
+        console.log('[TranscriptBot] Loaded from localStorage');
+        return d;
     }
 
-    // 2. Try GitHub raw URL if set
-    if (!data || !hasCategories(data)) {
-        const rawUrl = localStorage.getItem('tb_raw_url');
-        if (rawUrl) {
-            setProgress(40);
-            data = await tryFetch(rawUrl);
-            if (data) console.log('Loaded from GitHub URL');
+    // 2. GitHub raw URL saved by admin
+    var savedUrl = localStorage.getItem('tb_raw_url');
+    if (savedUrl) {
+        d = await loadFromURL(savedUrl);
+        if (d) {
+            console.log('[TranscriptBot] Loaded from saved URL');
+            return d;
         }
     }
 
-    // 3. Try same-origin data/transcripts.json
-    if (!data || !hasCategories(data)) {
-        setProgress(55);
-        data = await tryFetch('./data/transcripts.json');
-        if (data) console.log('Loaded from data/transcripts.json');
+    // 3. Default path (works on GitHub Pages)
+    d = await loadFromURL('./data/transcripts.json');
+    if (d) {
+        console.log('[TranscriptBot] Loaded from data/transcripts.json');
+        return d;
     }
 
-    setProgress(90);
-    await sleep(300);
-    setProgress(100);
-    await sleep(300);
+    return null;
+}
 
-    // Always hide loading screen
-    if (UD.loadScreen) UD.loadScreen.style.display = 'none';
+// ─────────────────────────────────────────
+//  WAIT FOR PUTER
+// ─────────────────────────────────────────
+async function waitForPuter(maxWait) {
+    maxWait = maxWait || 15000;
+    var waited = 0;
+    while (waited < maxWait) {
+        if (typeof puter !== 'undefined' && puter.ai && typeof puter.ai.chat === 'function') {
+            return true;
+        }
+        await sleep(300);
+        waited += 300;
+    }
+    return false;
+}
 
-    if (!data || !hasCategories(data)) {
-        // Show no-data screen
-        if (UD.noData) UD.noData.style.display = 'flex';
+// ─────────────────────────────────────────
+//  BOOT — runs after DOM ready
+// ─────────────────────────────────────────
+async function boot() {
+    disableInput('Loading...');
+    setStatus('Loading data...', false);
+
+    // Load transcript data (fast, no puter needed)
+    var data = await loadData();
+
+    if (!data) {
+        setStatus('No content loaded', false);
+        if (UD.statusLabel) {
+            UD.statusLabel.innerHTML = '<i class="fas fa-exclamation-circle" style="color:var(--warning)"></i> No transcripts found';
+        }
+        if (UD.welcomeTitle) UD.welcomeTitle.textContent = 'No Content Yet';
+        if (UD.welcomeSub)   UD.welcomeSub.textContent   = 'The admin has not uploaded any transcripts yet.';
+        disableInput('No transcripts available');
         return;
     }
 
     U.data     = data;
     U.settings = data.settings || {};
 
-    if (UD.userApp) UD.userApp.style.display = 'flex';
-
+    // Apply settings to UI
     applySettings();
     renderCategoryPills();
     renderFilterChips();
     renderSuggestions();
+
+    setStatus('Connecting to AI...', false);
+
+    // Wait for puter in background — don't block UI
+    waitForPuter(20000).then(function(ok) {
+        if (ok) {
+            U.ready = true;
+            enableInput();
+            setStatus(Object.keys(U.data.categories).length + ' categories loaded', true);
+            console.log('[TranscriptBot] Puter ready');
+        } else {
+            // Still enable input — puter might work anyway
+            U.ready = true;
+            enableInput();
+            setStatus('AI may be slow to connect', true);
+            console.warn('[TranscriptBot] Puter timeout — trying anyway');
+        }
+    });
+
+    // Enable input anyway after 3 seconds so user isn't blocked
+    setTimeout(function() {
+        if (!U.ready) {
+            U.ready = true;
+            enableInput();
+            setStatus('Ready (AI loading)', true);
+        }
+    }, 3000);
 }
 
-function hasCategories(data) {
-    return data &&
-        data.categories &&
-        typeof data.categories === 'object' &&
-        Object.keys(data.categories).length > 0;
-}
-
-function tryLocalStorage() {
-    try {
-        // Try both keys
-        const raw = localStorage.getItem('tb_export') || localStorage.getItem('tb_admin_db');
-        if (!raw) return null;
-        const parsed = JSON.parse(raw);
-        return hasCategories(parsed) ? parsed : null;
-    } catch (e) {
-        console.warn('localStorage read error:', e);
-        return null;
-    }
-}
-
-async function tryFetch(url) {
-    try {
-        const res = await fetch(url + '?t=' + Date.now(), {
-            cache: 'no-cache',
-        });
-        if (!res.ok) return null;
-        const data = await res.json();
-        return data;
-    } catch (e) {
-        console.warn('Fetch failed for', url, e);
-        return null;
-    }
-}
-
-// ── SETTINGS ───────────────────────────────────────────────
+// ─────────────────────────────────────────
+//  SETTINGS
+// ─────────────────────────────────────────
 function applySettings() {
-    const s = U.settings;
-
+    var s = U.settings;
     if (s.botName) {
-        const h1 = document.querySelector('.bot-info h1');
-        if (h1) h1.textContent = s.botName;
+        if (UD.botName)      UD.botName.textContent = s.botName;
         document.title = s.botName;
     }
-
-    if (s.welcome) {
-        const p = document.querySelector('.welcome-text p');
-        if (p) p.textContent = s.welcome;
+    if (s.welcome && UD.welcomeSub) {
+        UD.welcomeSub.textContent = s.welcome;
     }
-
     if (s.defaultModel && UD.modelSelect) {
-        const opt = UD.modelSelect.querySelector(`option[value="${s.defaultModel}"]`);
+        var opt = UD.modelSelect.querySelector('option[value="' + s.defaultModel + '"]');
         if (opt) opt.selected = true;
-    }
-
-    const total = Object.values(U.data.categories)
-        .reduce((sum, arr) => sum + arr.length, 0);
-    if (UD.topbarStatus) {
-        UD.topbarStatus.textContent = `${total} file(s) · ${Object.keys(U.data.categories).length} categories`;
     }
 }
 
-// ── CATEGORY UI ────────────────────────────────────────────
+// ─────────────────────────────────────────
+//  CATEGORIES
+// ─────────────────────────────────────────
+var ICONS = [
+    'fa-video','fa-book-open','fa-code','fa-music',
+    'fa-flask','fa-chart-line','fa-gamepad','fa-graduation-cap',
+    'fa-lightbulb','fa-globe','fa-microphone','fa-film'
+];
+
 function renderCategoryPills() {
     if (!UD.categoryPills) return;
     UD.categoryPills.innerHTML = '';
+    var cats = Object.keys(U.data.categories);
+    if (cats.length === 0) return;
 
-    const allPill = makePill('all', 'All', UD.categoryPills);
+    var allPill = makePill('all', 'All');
     UD.categoryPills.appendChild(allPill);
 
-    Object.keys(U.data.categories).forEach(cat => {
-        const p = makePill(cat, formatCatName(cat), UD.categoryPills);
-        UD.categoryPills.appendChild(p);
+    cats.forEach(function(cat) {
+        UD.categoryPills.appendChild(makePill(cat, formatCat(cat)));
     });
 
-    setActive('all', UD.categoryPills, '.cat-pill');
+    markActive('all', UD.categoryPills, '.cat-pill');
 }
 
 function renderFilterChips() {
     if (!UD.filterChips) return;
     UD.filterChips.innerHTML = '';
+    var cats = Object.keys(U.data.categories);
 
-    const allChip = makeChip('all', 'All');
-    UD.filterChips.appendChild(allChip);
-
-    Object.keys(U.data.categories).forEach(cat => {
-        const c = makeChip(cat, formatCatName(cat));
-        UD.filterChips.appendChild(c);
-    });
-
-    setActive('all', UD.filterChips, '.filter-chip');
-
-    if (Object.keys(U.data.categories).length <= 1 && UD.catSelRow) {
-        UD.catSelRow.style.display = 'none';
+    if (cats.length > 1) {
+        if (UD.catSelRow) UD.catSelRow.style.display = 'flex';
+        var allChip = makeChip('all', 'All');
+        UD.filterChips.appendChild(allChip);
+        cats.forEach(function(cat) {
+            UD.filterChips.appendChild(makeChip(cat, formatCat(cat)));
+        });
+        markActive('all', UD.filterChips, '.filter-chip');
     }
 }
 
-function makePill(id, label, container) {
-    const d = document.createElement('div');
-    d.className  = 'cat-pill';
+function makePill(id, label) {
+    var d = document.createElement('div');
+    d.className = 'cat-pill';
     d.dataset.id = id;
     d.textContent = label;
-    d.addEventListener('click', () => {
+    d.addEventListener('click', function() {
         U.selected = id;
-        setActive(id, container, '.cat-pill');
-        if (UD.filterChips) setActive(id, UD.filterChips, '.filter-chip');
+        markActive(id, UD.categoryPills, '.cat-pill');
+        markActive(id, UD.filterChips,   '.filter-chip');
     });
     return d;
 }
 
 function makeChip(id, label) {
-    const d = document.createElement('div');
-    d.className  = 'filter-chip';
+    var d = document.createElement('div');
+    d.className = 'filter-chip';
     d.dataset.id = id;
     d.textContent = label;
-    d.addEventListener('click', () => {
+    d.addEventListener('click', function() {
         U.selected = id;
-        setActive(id, UD.filterChips, '.filter-chip');
-        if (UD.categoryPills) setActive(id, UD.categoryPills, '.cat-pill');
+        markActive(id, UD.filterChips,   '.filter-chip');
+        markActive(id, UD.categoryPills, '.cat-pill');
     });
     return d;
 }
 
-function setActive(id, container, selector) {
+function markActive(id, container, sel) {
     if (!container) return;
-    container.querySelectorAll(selector).forEach(el => {
+    container.querySelectorAll(sel).forEach(function(el) {
         el.classList.toggle('active', el.dataset.id === id);
     });
 }
 
-// ── SUGGESTIONS ────────────────────────────────────────────
+// ─────────────────────────────────────────
+//  SUGGESTIONS
+// ─────────────────────────────────────────
 function renderSuggestions() {
     if (!UD.suggChips) return;
     UD.suggChips.innerHTML = '';
+    var suggs = (U.settings.suggestions && U.settings.suggestions.length)
+        ? U.settings.suggestions
+        : ['What topics are covered?', 'Summarize the main points', 'What are the key takeaways?'];
 
-    const suggestions = U.settings.suggestions || [
-        'What topics are covered?',
-        'Summarize the main points',
-        'What are the key takeaways?',
-        'Give me a brief overview',
-    ];
-
-    suggestions.slice(0, 4).forEach(s => {
-        const chip = document.createElement('div');
+    suggs.slice(0,4).forEach(function(s) {
+        var chip = document.createElement('div');
         chip.className   = 'chip';
         chip.textContent = s;
-        chip.addEventListener('click', () => {
-            if (UD.msgInput) UD.msgInput.value = s;
-            sendMessage();
+        chip.addEventListener('click', function() {
+            if (UD.msgInput) {
+                UD.msgInput.value = s;
+                sendMessage();
+            }
         });
         UD.suggChips.appendChild(chip);
     });
 }
 
-// ── CHUNK RETRIEVAL ────────────────────────────────────────
+// ─────────────────────────────────────────
+//  CHUNK RETRIEVAL (keyword search)
+// ─────────────────────────────────────────
 function tokenize(text) {
-    return String(text)
-        .toLowerCase()
-        .replace(/[^a-z0-9\s]/g, ' ')
+    return String(text).toLowerCase()
+        .replace(/[^a-z0-9\s]/g,' ')
         .split(/\s+/)
-        .filter(w => w.length > 2);
+        .filter(function(w){ return w.length > 2; });
 }
 
 function scoreChunk(chunk, query) {
-    const cTokens = tokenize(chunk);
-    const qTokens = tokenize(query);
-    const cSet    = new Set(cTokens);
-    let score     = 0;
-
-    const lQuery = query.toLowerCase();
-    const lChunk = chunk.toLowerCase();
-
-    if (lChunk.includes(lQuery)) score += 15;
-
-    for (const qt of qTokens) {
+    var cToks = tokenize(chunk);
+    var qToks = tokenize(query);
+    var cSet  = new Set(cToks);
+    var score = 0;
+    if (chunk.toLowerCase().indexOf(query.toLowerCase()) !== -1) score += 15;
+    qToks.forEach(function(qt) {
         if (cSet.has(qt)) score += 3;
-        for (const ct of cTokens) {
-            if (ct !== qt && (ct.includes(qt) || qt.includes(ct))) score += 0.3;
-        }
-    }
-
-    if (cTokens.length > 30 && cTokens.length < 400) score += 1;
+    });
     return score;
 }
 
-function retrieveChunks(query, topK) {
-    const k    = topK || parseInt(U.settings.topK) || 6;
-    const cats = U.selected === 'all'
+function retrieveChunks(query) {
+    var topK = parseInt(U.settings.topK) || 5;
+    var cats = U.selected === 'all'
         ? Object.keys(U.data.categories)
         : [U.selected];
 
-    const results = [];
-
-    for (const cat of cats) {
-        const files = U.data.categories[cat] || [];
-        for (const file of files) {
-            const chunks = file.chunks || [];
-            for (const chunk of chunks) {
-                const sc = scoreChunk(chunk, query);
+    var results = [];
+    cats.forEach(function(cat) {
+        var files = U.data.categories[cat] || [];
+        files.forEach(function(file) {
+            var chunks = file.chunks || [];
+            chunks.forEach(function(chunk) {
+                var sc = scoreChunk(chunk, query);
                 if (sc > 0) {
-                    results.push({ chunk, score: sc, cat, file: file.name });
+                    results.push({ chunk: chunk, score: sc, cat: cat, file: file.name });
                 }
-            }
-        }
-    }
+            });
+        });
+    });
 
-    results.sort((a, b) => b.score - a.score);
-    return results.slice(0, k);
+    results.sort(function(a,b){ return b.score - a.score; });
+    return results.slice(0, topK);
 }
 
-// ── CHAT ───────────────────────────────────────────────────
-function addMsg(role, content = '', streaming = false) {
-    // Hide welcome block
+// ─────────────────────────────────────────
+//  CHAT
+// ─────────────────────────────────────────
+function addMsg(role, content, streaming) {
+    // hide welcome
     if (UD.welcomeBlock) UD.welcomeBlock.style.display = 'none';
 
-    const wrap = document.createElement('div');
-    wrap.className = `msg-wrap ${role}`;
+    var wrap = document.createElement('div');
+    wrap.className = 'msg-wrap ' + role;
 
-    const icon = role === 'user' ? 'fa-user' : 'fa-robot';
+    var icon = role === 'user' ? 'fa-user' : 'fa-robot';
 
-    wrap.innerHTML = `
-        <div class="msg-av"><i class="fas ${icon}"></i></div>
-        <div class="msg-inner">
-            <div class="msg-bub ${streaming ? 'streaming-cursor' : ''}">
-                ${streaming
-                    ? '<div class="typing-dots"><span></span><span></span><span></span></div>'
-                    : fmt(content)
-                }
-            </div>
-            <div class="msg-meta"><span>${ts()}</span></div>
-        </div>
-    `;
+    if (streaming) {
+        wrap.innerHTML =
+            '<div class="msg-av"><i class="fas ' + icon + '"></i></div>' +
+            '<div class="msg-inner">' +
+                '<div class="msg-bub streaming-cursor">' +
+                    '<div class="typing-dots"><span></span><span></span><span></span></div>' +
+                '</div>' +
+                '<div class="msg-meta"><span>' + ts() + '</span></div>' +
+            '</div>';
+    } else {
+        wrap.innerHTML =
+            '<div class="msg-av"><i class="fas ' + icon + '"></i></div>' +
+            '<div class="msg-inner">' +
+                '<div class="msg-bub">' + fmt(content) + '</div>' +
+                '<div class="msg-meta"><span>' + ts() + '</span></div>' +
+            '</div>';
+    }
 
     if (UD.msgList) UD.msgList.appendChild(wrap);
     scrollDown();
@@ -380,66 +443,75 @@ function addMsg(role, content = '', streaming = false) {
 
 async function sendMessage() {
     if (!UD.msgInput) return;
-    const text = UD.msgInput.value.trim();
+    var text = UD.msgInput.value.trim();
     if (!text || U.loading) return;
 
-    // Check puter loaded
-    if (typeof puter === 'undefined') {
-        toast('Puter.js not loaded yet — please wait a moment', 'warning');
+    // Check puter
+    if (typeof puter === 'undefined' || !puter.ai) {
+        toast('AI not loaded yet, please wait a moment and try again', 'warning');
         return;
     }
 
-    U.loading            = true;
-    UD.sendBtn.disabled  = true;
-    UD.msgInput.value    = '';
-    UD.msgInput.style.height = 'auto';
-    if (UD.charCount) UD.charCount.textContent = '0';
+    // Check data
+    if (!U.data) {
+        toast('No transcript data loaded', 'error');
+        return;
+    }
 
-    addMsg('user', text);
+    U.loading = true;
+    UD.sendBtn.disabled = true;
+    UD.msgInput.value   = '';
+    UD.msgInput.style.height = 'auto';
+    if (UD.charCount) UD.charCount.textContent = '';
+
+    addMsg('user', text, false);
     U.history.push({ role: 'user', content: text });
 
-    const chunks     = retrieveChunks(text);
-    const hasContext = chunks.length > 0;
+    // Get context
+    var chunks     = retrieveChunks(text);
+    var hasContext = chunks.length > 0;
 
-    const contextText = hasContext
-        ? chunks.map(r =>
-            `[Category: ${formatCatName(r.cat)} | File: ${r.file}]\n${r.chunk}`
-          ).join('\n\n---\n\n')
+    var contextText = hasContext
+        ? chunks.map(function(r) {
+            return '[Category: ' + formatCat(r.cat) + ' | File: ' + r.file + ']\n' + r.chunk;
+          }).join('\n\n---\n\n')
         : 'No relevant transcript content found.';
 
-    const systemPrompt = (U.settings.systemPrompt && U.settings.systemPrompt.trim())
-        ? U.settings.systemPrompt
-        : `You are a helpful assistant that answers questions based ONLY on the provided video transcript content.
+    var systemPrompt = 'You are a helpful assistant that answers questions based ONLY on the provided video transcript content.\n\n' +
+        'RULES:\n' +
+        '1. Only use the transcript content below to answer.\n' +
+        '2. If not found, say: "I could not find that in the available transcripts."\n' +
+        '3. Be concise and helpful.\n\n' +
+        'TRANSCRIPT CONTENT:\n' + contextText;
 
-RULES:
-1. Only use the transcript content below to answer.
-2. If the answer is not in the transcripts, say: "I couldn't find that in the available transcripts."
-3. Be clear, concise, and helpful.
-4. Mention the source file/category when relevant.
+    if (U.settings.systemPrompt && U.settings.systemPrompt.trim()) {
+        systemPrompt = U.settings.systemPrompt + '\n\nTRANSCRIPT CONTENT:\n' + contextText;
+    }
 
-TRANSCRIPT CONTENT:
-${contextText}`;
+    var messages = [{ role: 'system', content: systemPrompt }];
 
-    const messages = [
-        { role: 'system', content: systemPrompt },
-        ...U.history.slice(-10),
-    ];
+    // Add recent history
+    var hist = U.history.slice(-8);
+    for (var i = 0; i < hist.length - 1; i++) {
+        messages.push(hist[i]);
+    }
+    messages.push({ role: 'user', content: text });
 
-    const botEl  = addMsg('bot', '', true);
-    const bubEl  = botEl.querySelector('.msg-bub');
-    const metaEl = botEl.querySelector('.msg-meta');
-    const model  = UD.modelSelect ? UD.modelSelect.value : 'gpt-4o-mini';
+    var model  = (UD.modelSelect ? UD.modelSelect.value : null) || 'gpt-4o-mini';
+    var botEl  = addMsg('bot', '', true);
+    var bubEl  = botEl.querySelector('.msg-bub');
+    var metaEl = botEl.querySelector('.msg-meta');
 
-    let full = '';
+    var full = '';
 
     try {
-        const stream = await puter.ai.chat(messages, { model, stream: true });
+        var stream = await puter.ai.chat(messages, { model: model, stream: true });
 
         bubEl.innerHTML = '';
         bubEl.classList.add('streaming-cursor');
 
-        for await (const part of stream) {
-            const token = part?.text || '';
+        for await (var part of stream) {
+            var token = (part && part.text) ? part.text : '';
             full += token;
             bubEl.innerHTML = fmt(full);
             scrollDown();
@@ -447,27 +519,30 @@ ${contextText}`;
 
         bubEl.classList.remove('streaming-cursor');
 
-        // Add source tags
+        // Source tags
         if (hasContext) {
-            const sources = [...new Set(
-                chunks.slice(0, 3).map(c => `${formatCatName(c.cat)} › ${c.file}`)
-            )];
-            sources.forEach(src => {
-                const tag = document.createElement('span');
-                tag.className   = 'src-tag';
-                tag.textContent = `📄 ${src}`;
-                metaEl.appendChild(tag);
+            var seen = {};
+            chunks.slice(0,3).forEach(function(c) {
+                var key = formatCat(c.cat) + ' › ' + c.file;
+                if (!seen[key]) {
+                    seen[key] = true;
+                    var tag = document.createElement('span');
+                    tag.className   = 'src-tag';
+                    tag.textContent = '📄 ' + key;
+                    metaEl.appendChild(tag);
+                }
             });
         }
 
         U.history.push({ role: 'assistant', content: full });
 
-    } catch (err) {
+    } catch(err) {
         bubEl.classList.remove('streaming-cursor');
         console.error('AI error:', err);
-        bubEl.innerHTML = `<span style="color:var(--error)">
-            ⚠ Error: ${err.message || 'Something went wrong. Please try again.'}
-        </span>`;
+        bubEl.innerHTML =
+            '<span style="color:var(--error)">⚠ Error: ' +
+            (err.message || 'Something went wrong. Please try again.') +
+            '</span>';
     }
 
     U.loading           = false;
@@ -475,30 +550,29 @@ ${contextText}`;
     if (UD.msgInput) UD.msgInput.focus();
 }
 
-// ── EVENTS ─────────────────────────────────────────────────
+// ─────────────────────────────────────────
+//  EVENTS
+// ─────────────────────────────────────────
 if (UD.sendBtn) {
     UD.sendBtn.addEventListener('click', sendMessage);
 }
 
 if (UD.msgInput) {
-    UD.msgInput.addEventListener('keydown', e => {
+    UD.msgInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
 
-    UD.msgInput.addEventListener('input', () => {
+    UD.msgInput.addEventListener('input', function() {
         UD.msgInput.style.height = 'auto';
         UD.msgInput.style.height = Math.min(UD.msgInput.scrollHeight, 130) + 'px';
-        if (UD.charCount) UD.charCount.textContent = UD.msgInput.value.length;
+        if (UD.charCount) UD.charCount.textContent = UD.msgInput.value.length || '';
     });
 }
 
-// ── START ──────────────────────────────────────────────────
-boot().catch(err => {
-    console.error('Boot error:', err);
-    // Always show something to the user
-    if (UD.loadScreen) UD.loadScreen.style.display = 'none';
-    if (UD.noData)     UD.noData.style.display     = 'flex';
-});
+// ─────────────────────────────────────────
+//  START — no waiting for anything
+// ─────────────────────────────────────────
+boot();
