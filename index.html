@@ -18,7 +18,7 @@
                 <i class="fas fa-robot"></i>
             </div>
             <h2>TranscriptBot</h2>
-            <p>Loading knowledge base...</p>
+            <p id="loadingMsg">Loading knowledge base...</p>
             <div class="loading-bar">
                 <div class="loading-fill" id="loadingFill"></div>
             </div>
@@ -37,13 +37,11 @@
                 </div>
                 <div class="bot-info">
                     <h1>TranscriptBot</h1>
-                    <span id="topbarStatus">Ready to help</span>
+                    <span id="topbarStatus">Ready</span>
                 </div>
             </div>
             <div class="topbar-right">
-                <div class="category-pills" id="categoryPills">
-                    <!-- Pills rendered here -->
-                </div>
+                <div class="category-pills" id="categoryPills"></div>
                 <div class="model-pill">
                     <i class="fas fa-microchip"></i>
                     <select id="modelSelect">
@@ -59,8 +57,6 @@
 
         <!-- CHAT AREA -->
         <div class="user-chat" id="userChat">
-
-            <!-- WELCOME -->
             <div class="welcome-block" id="welcomeBlock">
                 <div class="welcome-avatar">
                     <i class="fas fa-robot"></i>
@@ -69,31 +65,24 @@
                     <h2>Hi! I'm TranscriptBot 👋</h2>
                     <p>Ask me anything about the video content. I'll find the answer from the transcripts.</p>
                 </div>
-                <div class="suggestion-chips" id="suggestionChips">
-                    <!-- Suggestions added dynamically -->
-                </div>
+                <div class="suggestion-chips" id="suggestionChips"></div>
             </div>
-
-            <!-- MESSAGES -->
             <div class="messages-list" id="messagesList"></div>
-
         </div>
 
         <!-- INPUT -->
         <div class="user-input-area">
-            <div class="input-wrap" id="inputWrap">
+            <div class="input-wrap">
                 <div class="category-select-row" id="categorySelectRow">
                     <span class="filter-label">
                         <i class="fas fa-filter"></i> Filter:
                     </span>
-                    <div class="filter-chips" id="filterChips">
-                        <!-- filter chips -->
-                    </div>
+                    <div class="filter-chips" id="filterChips"></div>
                 </div>
                 <div class="input-row">
                     <textarea
                         id="msgInput"
-                        placeholder="Ask a question..."
+                        placeholder="Ask a question about the transcripts..."
                         rows="1"
                     ></textarea>
                     <button class="send-btn" id="sendBtn">
@@ -109,20 +98,26 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- NO DATA STATE -->
+    <!-- NO DATA SCREEN -->
     <div class="no-data-screen" id="noDataScreen" style="display:none">
         <div class="no-data-content">
-            <i class="fas fa-database"></i>
-            <h2>No Content Yet</h2>
+            <div class="no-data-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h2>Coming Soon</h2>
             <p>The knowledge base is being set up. Please check back soon.</p>
+            <div class="no-data-steps">
+                <div class="no-data-step">
+                    <i class="fas fa-clock"></i>
+                    Content is being prepared
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="toast-wrap" id="toastWrap"></div>
-
     <script src="user.js"></script>
 </body>
 </html>
