@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "generated": "2024-01-01T00:00:00.000Z",
+  "settings": {
+    "botName": "TranscriptBot",
+    "welcome": "Hi! I'm TranscriptBot 👋 Ask me anything about the video content.",
+    "suggestions": ["What topics are covered?", "Summarize the main points", "What are the key takeaways?"],
+    "defaultModel": "gpt-4o",
+    "chunkSize": 400,
+    "topK": 6,
+    "systemPrompt": ""
+  },
+  "categories": {}
+}
