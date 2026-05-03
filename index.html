@@ -30,27 +30,13 @@
         .mdl i{color:var(--p);font-size:10px}
         .mdl select{background:transparent;border:none;color:var(--t2);font-size:10px;font-family:inherit;outline:none;cursor:pointer}
         .mdl select option{background:var(--b3);color:var(--t1)}
-
-        /* DEBUG BOX — visible on screen */
-        .dbg-box{
-            flex-shrink:0;padding:8px 16px;background:var(--b3);
-            border-bottom:1px solid var(--br2);
-            font-size:10px;color:var(--t3);font-family:monospace;
-            max-height:120px;overflow-y:auto;
-            display:none;
-        }
+        .dbg-toggle{position:fixed;top:8px;right:8px;z-index:999;width:28px;height:28px;background:var(--b3);border:1px solid var(--br2);border-radius:6px;color:var(--t3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .dbg-box{flex-shrink:0;padding:8px 16px;background:#0a0a12;border-bottom:1px solid var(--br2);font-size:10px;color:var(--t3);font-family:monospace;max-height:150px;overflow-y:auto;display:none}
         .dbg-box.show{display:block}
-        .dbg-box .line{padding:2px 0;border-bottom:1px solid var(--br)}
+        .dbg-box .line{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
         .dbg-box .ok{color:var(--ok)}
         .dbg-box .bad{color:var(--err)}
         .dbg-box .wrn{color:var(--warn)}
-        .dbg-toggle{
-            position:fixed;top:8px;right:8px;z-index:999;
-            width:28px;height:28px;background:var(--b3);border:1px solid var(--br2);
-            border-radius:6px;color:var(--t3);font-size:11px;cursor:pointer;
-            display:flex;align-items:center;justify-content:center;
-        }
-
         .fbar{flex-shrink:0;padding:8px 16px;background:var(--b1);border-bottom:1px solid var(--br);display:flex;gap:8px;align-items:center;z-index:15;flex-wrap:wrap}
         .fgroup{display:flex;align-items:center;gap:5px}
         .fgroup label{font-size:9px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:3px;white-space:nowrap}
@@ -58,7 +44,6 @@
         .fsel{background:var(--b3);border:1px solid var(--br2);border-radius:7px;padding:5px 24px 5px 8px;color:var(--t1);font-size:11px;font-family:inherit;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236b7a90'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;min-width:120px;max-width:180px;transition:border-color .2s}
         .fsel:focus{border-color:var(--pg)}
         .fsel option{background:var(--b3);color:var(--t1)}
-
         .chat{flex:1;overflow-y:auto;scroll-behavior:smooth;min-height:0}
         .wel{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:30px 16px 20px;max-width:480px;margin:0 auto}
         .wel-ico{width:60px;height:60px;background:linear-gradient(135deg,var(--p),var(--p2));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;box-shadow:0 6px 24px rgba(124,58,237,.3);animation:fl 3s ease-in-out infinite}
@@ -68,7 +53,6 @@
         .chips{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-top:4px}
         .chip{padding:7px 14px;background:var(--b2);border:1px solid var(--br2);border-radius:99px;font-size:11px;color:var(--t2);cursor:pointer;transition:all .2s}
         .chip:hover{background:var(--ps);border-color:var(--pg);color:var(--pt);transform:translateY(-1px)}
-
         .msgs{display:flex;flex-direction:column;gap:4px;max-width:700px;margin:0 auto;padding:0 16px 16px;width:100%}
         .m{display:flex;gap:8px;animation:ms .3s cubic-bezier(.16,1,.3,1)}
         @keyframes ms{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
@@ -92,7 +76,6 @@
         @keyframes db{0%,80%,100%{transform:scale(1);opacity:.3}40%{transform:scale(1.3);opacity:1}}
         .stm::after{content:'';animation:blk .7s infinite;color:var(--p);margin-left:2px}
         @keyframes blk{0%,100%{opacity:1}50%{opacity:0}}
-
         .inp-area{flex-shrink:0;padding:6px 16px 12px;background:var(--b0);border-top:1px solid var(--br);z-index:10}
         .inp-box{max-width:700px;margin:0 auto;background:var(--b2);border:1.5px solid var(--br2);border-radius:12px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
         .inp-box:focus-within{border-color:var(--pg);box-shadow:0 0 0 3px rgba(124,58,237,.05)}
@@ -104,7 +87,6 @@
         .snd:hover:not(:disabled){transform:translateY(-1px)}
         .snd:disabled{opacity:.2;cursor:not-allowed;transform:none;box-shadow:none}
         .inp-ft{display:flex;justify-content:flex-end;padding:2px 12px 7px;font-size:9px;color:var(--t4)}
-
         .tbox{position:fixed;bottom:12px;right:12px;z-index:99999;display:flex;flex-direction:column;gap:5px}
         .toast{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--b2);border:1px solid var(--br2);border-radius:9px;font-size:11px;max-width:260px;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ti .25s cubic-bezier(.16,1,.3,1)}
         @keyframes ti{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
@@ -113,7 +95,6 @@
 </head>
 <body>
 
-<!-- DEBUG TOGGLE -->
 <button class="dbg-toggle" id="dbgToggle" title="Debug"><i class="fas fa-bug"></i></button>
 
 <div class="app">
@@ -134,7 +115,6 @@
         </div>
     </div>
 
-    <!-- DEBUG BOX — visible on phone -->
     <div class="dbg-box" id="dbgBox"></div>
 
     <div class="fbar" id="fbar">
@@ -184,14 +164,19 @@ var D = {
     tbox:$("tbox"), dbgBox:$("dbgBox"), dbgToggle:$("dbgToggle")
 };
 
+// ═══════════════════════════════════
 // DEBUG — visible on screen
+// ═══════════════════════════════════
 var dbgLines = [];
 function dbg(msg, type) {
     type = type || "";
     dbgLines.push({msg: msg, type: type});
     var html = "";
     for (var i = 0; i < dbgLines.length; i++) {
-        var cls = dbgLines[i].type === "ok" ? "ok" : dbgLines[i].type === "bad" ? "bad" : dbgLines[i].type === "wrn" ? "wrn" : "";
+        var cls = "";
+        if (dbgLines[i].type === "ok") cls = "ok";
+        else if (dbgLines[i].type === "bad") cls = "bad";
+        else if (dbgLines[i].type === "wrn") cls = "wrn";
         html += '<div class="line ' + cls + '">' + dbgLines[i].msg + '</div>';
     }
     D.dbgBox.innerHTML = html;
@@ -202,108 +187,171 @@ D.dbgToggle.addEventListener("click", function() {
     D.dbgBox.classList.toggle("show");
 });
 
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
 function toast(m, t) {
     t = t || "info";
     var ic = {success:"fa-check-circle", error:"fa-times-circle", warning:"fa-exclamation-triangle", info:"fa-info-circle"};
     var d = document.createElement("div");
     d.className = "toast " + t;
-    d.innerHTML = '<i class="fas ' + (ic[t]||ic.info) + '"></i> ' + m;
+    d.innerHTML = '<i class="fas ' + (ic[t] || ic.info) + '"></i> ' + m;
     D.tbox.appendChild(d);
-    setTimeout(function() { d.style.opacity="0"; d.style.transition=".3s"; setTimeout(function(){d.remove()},300); }, 4000);
+    setTimeout(function() { d.style.opacity = "0"; d.style.transition = ".3s"; setTimeout(function() { d.remove(); }, 300); }, 4000);
 }
 
-function fc(c) { return c.replace(/_/g," ").replace(/\b\w/g, function(x){return x.toUpperCase()}); }
-function tm() { return new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}); }
+function fc(c) { return c.replace(/_/g, " ").replace(/\b\w/g, function(x) { return x.toUpperCase(); }); }
+function tm() { return new Date().toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"}); }
 function sd() { D.chat.scrollTop = D.chat.scrollHeight; }
 function fm(t) {
-    return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-        .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\*(.*?)\*/g,"<em>$1</em>")
-        .replace(/`([^`]+)`/g,"<code>$1</code>").replace(/\n/g,"<br>");
+    return String(t || "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\*(.*?)\*/g, "<em>$1</em>")
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\n/g, "<br>");
 }
 function online(y) { D.dot.className = y ? "dot on" : "dot"; }
-function enable() { D.inp.disabled=false; D.snd.disabled=false; D.inp.placeholder="Ask anything..."; }
-function disable(m) { D.inp.disabled=true; D.snd.disabled=true; D.inp.placeholder=m||"Wait..."; }
-function sl(ms) { return new Promise(function(r){setTimeout(r,ms)}); }
+function enable() { D.inp.disabled = false; D.snd.disabled = false; D.inp.placeholder = "Ask anything..."; }
+function disable(m) { D.inp.disabled = true; D.snd.disabled = true; D.inp.placeholder = m || "Wait..."; }
+function sl(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
-// ── DATA LOADING ──
+// ═══════════════════════════════════
+// DATA LOADING
+// ═══════════════════════════════════
 function ldLocal() {
     dbg("Checking localStorage...");
     try {
         var raw = localStorage.getItem("tb_export");
+        if (!raw) raw = localStorage.getItem("tb_admin_db");
         if (!raw) {
-            raw = localStorage.getItem("tb_admin_db");
-        }
-        if (!raw) {
-            dbg("No localStorage data found", "wrn");
+            dbg("No localStorage data", "wrn");
             return null;
         }
         dbg("Found localStorage: " + raw.length + " chars");
-        var d = JSON.parse(raw);
+
+        // Check if it starts with {
+        var trimmed = raw.trim();
+        if (trimmed.charAt(0) !== "{") {
+            dbg("localStorage not JSON, starts with: " + trimmed.slice(0, 30), "bad");
+            // Clear bad data
+            localStorage.removeItem("tb_export");
+            localStorage.removeItem("tb_admin_db");
+            return null;
+        }
+
+        var d = JSON.parse(trimmed);
         if (d && d.categories && Object.keys(d.categories).length > 0) {
             var cats = Object.keys(d.categories).length;
             var files = 0;
-            for (var i = 0; i < Object.keys(d.categories).length; i++) {
-                files += d.categories[Object.keys(d.categories)[i]].length;
+            var keys = Object.keys(d.categories);
+            for (var i = 0; i < keys.length; i++) {
+                files += d.categories[keys[i]].length;
             }
             dbg("localStorage OK: " + cats + " cats, " + files + " files", "ok");
             return d;
         }
-        dbg("localStorage has no categories", "wrn");
+        dbg("localStorage empty categories", "wrn");
         return null;
     } catch(e) {
         dbg("localStorage error: " + e.message, "bad");
+        // Clear corrupted data
+        localStorage.removeItem("tb_export");
+        localStorage.removeItem("tb_admin_db");
         return null;
     }
 }
 
 function ldUrl(url, timeout) {
     timeout = timeout || 30000;
-    dbg("Fetching URL: " + url.slice(0, 60) + "...");
+    dbg("Fetching: " + url.slice(0, 80));
 
     return new Promise(function(resolve) {
         var done = false;
         var timer = setTimeout(function() {
             if (!done) {
                 done = true;
-                dbg("Fetch TIMEOUT after " + (timeout/1000) + "s", "bad");
+                dbg("TIMEOUT after " + (timeout / 1000) + "s", "bad");
                 resolve(null);
             }
         }, timeout);
 
         fetch(url + "?nocache=" + Date.now())
         .then(function(r) {
+            dbg("HTTP status: " + r.status);
+            var ct = r.headers.get("content-type") || "unknown";
+            dbg("Content-Type: " + ct);
+
             if (!r.ok) {
-                dbg("Fetch HTTP error: " + r.status, "bad");
+                dbg("HTTP error: " + r.status, "bad");
                 if (!done) { done = true; clearTimeout(timer); resolve(null); }
                 return null;
             }
-            dbg("HTTP OK, reading body...");
+
+            // Check if GitHub is returning HTML instead of JSON
+            if (ct.indexOf("text/html") !== -1) {
+                dbg("WARNING: Server returned HTML, not JSON!", "bad");
+                dbg("Your file might not exist at this URL", "bad");
+            }
+
             return r.text();
         })
         .then(function(text) {
             if (done || !text) return;
             done = true;
             clearTimeout(timer);
+
             dbg("Received " + text.length + " chars");
+            dbg("First 120 chars: " + text.slice(0, 120));
+
+            var trimmed = text.trim();
+
+            // Check if it starts with valid JSON
+            if (trimmed.charAt(0) !== "{" && trimmed.charAt(0) !== "[") {
+                dbg("NOT valid JSON!", "bad");
+                dbg("Starts with: " + trimmed.slice(0, 80), "bad");
+                dbg("This file is not proper JSON. Re-export from admin.", "bad");
+                resolve(null);
+                return;
+            }
+
             try {
-                var d = JSON.parse(text);
+                var d = JSON.parse(trimmed);
                 if (d && d.categories && Object.keys(d.categories).length > 0) {
                     var cats = Object.keys(d.categories).length;
-                    dbg("Parsed OK: " + cats + " categories", "ok");
-                    // Try to cache
+                    var files = 0;
+                    var keys = Object.keys(d.categories);
+                    for (var i = 0; i < keys.length; i++) {
+                        files += d.categories[keys[i]].length;
+                    }
+                    dbg("Parsed OK: " + cats + " cats, " + files + " files", "ok");
+
+                    // Cache locally
                     try {
-                        localStorage.setItem("tb_export", text);
+                        localStorage.setItem("tb_export", trimmed);
                         dbg("Cached to localStorage", "ok");
                     } catch(e) {
                         dbg("Cache failed (too big): " + e.message, "wrn");
                     }
+
                     resolve(d);
                 } else {
-                    dbg("JSON has no categories", "bad");
+                    dbg("JSON has no categories field", "bad");
                     resolve(null);
                 }
             } catch(e) {
-                dbg("JSON parse error: " + e.message, "bad");
+                dbg("JSON PARSE ERROR: " + e.message, "bad");
+
+                // Find where the error is
+                var pos = -1;
+                var match = e.message.match(/position (\d+)/i);
+                if (match) {
+                    pos = parseInt(match[1]);
+                    dbg("Error at position " + pos, "bad");
+                    dbg("Near: ..." + trimmed.slice(Math.max(0, pos - 40), pos + 40) + "...", "bad");
+                }
+
+                dbg("Your JSON file has a syntax error. Re-export from admin panel.", "bad");
                 resolve(null);
             }
         })
@@ -311,7 +359,7 @@ function ldUrl(url, timeout) {
             if (!done) {
                 done = true;
                 clearTimeout(timer);
-                dbg("Fetch error: " + e.message, "bad");
+                dbg("Network error: " + e.message, "bad");
                 resolve(null);
             }
         });
@@ -325,14 +373,18 @@ async function ldData() {
 
     // 2. Saved URL
     var url = localStorage.getItem("tb_raw_url");
-    dbg("Saved URL: " + (url ? url.slice(0, 50) + "..." : "NONE"), url ? "" : "wrn");
+    if (url) {
+        dbg("Saved URL: " + url.slice(0, 60) + "...");
+    } else {
+        dbg("Saved URL: NONE", "wrn");
+    }
 
     if (url) {
         D.status.textContent = "Loading from GitHub...";
         d = await ldUrl(url, 60000);
         if (d) return d;
 
-        // Retry
+        // Retry once
         dbg("Retrying in 3s...", "wrn");
         D.status.textContent = "Retrying...";
         await sl(3000);
@@ -351,56 +403,99 @@ async function ldData() {
 }
 
 async function waitAI(mx) {
-    mx = mx || 12000; var t = 0;
+    mx = mx || 12000;
+    var t = 0;
     while (t < mx) {
         if (typeof puter !== "undefined" && puter.ai && typeof puter.ai.chat === "function") return true;
-        await sl(250); t += 250;
+        await sl(250);
+        t += 250;
     }
     return false;
 }
 
-// ── DROPDOWNS ──
+// ═══════════════════════════════════
+// DROPDOWNS
+// ═══════════════════════════════════
 function buildCat() {
     D.catSel.innerHTML = "";
     var cats = Object.keys(S.data.categories);
-    var o = document.createElement("option"); o.value = "all"; o.textContent = "All (" + cntAll() + ")"; D.catSel.appendChild(o);
+    var o = document.createElement("option");
+    o.value = "all";
+    o.textContent = "All (" + cntAll() + ")";
+    D.catSel.appendChild(o);
     cats.forEach(function(c) {
-        var opt = document.createElement("option"); opt.value = c;
+        var opt = document.createElement("option");
+        opt.value = c;
         opt.textContent = fc(c) + " (" + S.data.categories[c].length + ")";
         D.catSel.appendChild(opt);
     });
-    D.catSel.value = "all"; buildVid();
+    D.catSel.value = "all";
+    buildVid();
 }
 
 function buildVid() {
     D.vidSel.innerHTML = "";
     var files = filesFor(S.cat);
-    if (files.length <= 1) { D.vidGroup.style.display = "none"; S.vid = "all"; return; }
+    if (files.length <= 1) {
+        D.vidGroup.style.display = "none";
+        S.vid = "all";
+        return;
+    }
     D.vidGroup.style.display = "flex";
-    var o = document.createElement("option"); o.value = "all"; o.textContent = "All (" + files.length + ")"; D.vidSel.appendChild(o);
+    var o = document.createElement("option");
+    o.value = "all";
+    o.textContent = "All (" + files.length + ")";
+    D.vidSel.appendChild(o);
     files.forEach(function(f) {
-        var opt = document.createElement("option"); opt.value = f.name;
-        opt.textContent = f.name.replace(/\.(txt|pdf)$/i,"").replace(/_/g," ");
+        var opt = document.createElement("option");
+        opt.value = f.name;
+        opt.textContent = f.name.replace(/\.(txt|pdf)$/i, "").replace(/_/g, " ");
         D.vidSel.appendChild(opt);
     });
     D.vidSel.value = "all";
 }
 
-D.catSel.addEventListener("change", function() { S.cat = D.catSel.value; S.vid = "all"; buildVid(); });
-D.vidSel.addEventListener("change", function() { S.vid = D.vidSel.value; });
+D.catSel.addEventListener("change", function() {
+    S.cat = D.catSel.value;
+    S.vid = "all";
+    buildVid();
+});
+D.vidSel.addEventListener("change", function() {
+    S.vid = D.vidSel.value;
+});
 
 function filesFor(c) {
-    if (c === "all") { var a = []; var k = Object.keys(S.data.categories); for (var i=0;i<k.length;i++) { var f = S.data.categories[k[i]]; for (var j=0;j<f.length;j++) a.push(f[j]); } return a; }
+    if (c === "all") {
+        var a = [];
+        var k = Object.keys(S.data.categories);
+        for (var i = 0; i < k.length; i++) {
+            var f = S.data.categories[k[i]];
+            for (var j = 0; j < f.length; j++) a.push(f[j]);
+        }
+        return a;
+    }
     return S.data.categories[c] || [];
 }
-function cntAll() { var n=0; var k=Object.keys(S.data.categories); for(var i=0;i<k.length;i++) n+=S.data.categories[k[i]].length; return n; }
 
-// ── SUGGESTIONS ──
+function cntAll() {
+    var n = 0;
+    var k = Object.keys(S.data.categories);
+    for (var i = 0; i < k.length; i++) n += S.data.categories[k[i]].length;
+    return n;
+}
+
+// ═══════════════════════════════════
+// SUGGESTIONS
+// ═══════════════════════════════════
 function buildChips() {
     D.chips.innerHTML = "";
-    var sg = (S.set.suggestions && S.set.suggestions.length) ? S.set.suggestions : ["What topics are covered?","Summarize the main points","Explain this simply"];
-    sg.slice(0,3).forEach(function(s) {
-        var c = document.createElement("div"); c.className = "chip"; c.textContent = s;
+    var sg = (S.set.suggestions && S.set.suggestions.length)
+        ? S.set.suggestions
+        : ["What topics are covered?", "Summarize the main points", "Explain this simply"];
+    sg.slice(0, 3).forEach(function(s) {
+        var c = document.createElement("div");
+        c.className = "chip";
+        c.textContent = s;
         c.addEventListener("click", function() { D.inp.value = s; send(); });
         D.chips.appendChild(c);
     });
@@ -410,108 +505,222 @@ function applySets() {
     var s = S.set;
     if (s.botName) { D.title.textContent = s.botName; document.title = s.botName; }
     if (s.welcome) D.welP.textContent = s.welcome;
-    if (s.defaultModel) { var o = D.model.querySelector('option[value="'+s.defaultModel+'"]'); if(o) o.selected=true; }
+    if (s.defaultModel) {
+        var o = D.model.querySelector('option[value="' + s.defaultModel + '"]');
+        if (o) o.selected = true;
+    }
 }
 
-// ── SEARCH ──
-function tok(t) { return String(t).toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(function(w){return w.length>1}); }
+// ═══════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════
+function tok(t) {
+    return String(t).toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(function(w) { return w.length > 1; });
+}
 
 function sc(chunk, q) {
-    var ct=tok(chunk); var qt=tok(q); var cs=new Set(ct); var s=0;
-    if(chunk.toLowerCase().indexOf(q.toLowerCase())!==-1) s+=20;
-    qt.forEach(function(w){ if(cs.has(w)) s+=4; ct.forEach(function(c){ if(c.length>2&&w.length>2&&(c.indexOf(w)!==-1||w.indexOf(c)!==-1)) s+=1; }); });
-    if(ct.length>20&&ct.length<400) s+=2;
+    var ct = tok(chunk);
+    var qt = tok(q);
+    var cs = new Set(ct);
+    var s = 0;
+    if (chunk.toLowerCase().indexOf(q.toLowerCase()) !== -1) s += 20;
+    qt.forEach(function(w) {
+        if (cs.has(w)) s += 4;
+        ct.forEach(function(c) {
+            if (c.length > 2 && w.length > 2 && (c.indexOf(w) !== -1 || w.indexOf(c) !== -1)) s += 1;
+        });
+    });
+    if (ct.length > 20 && ct.length < 400) s += 2;
     return s;
 }
 
 function sPrimary(q) {
-    var tk=Math.max(parseInt(S.set.topK)||5,8);
-    var cats=S.cat==="all"?Object.keys(S.data.categories):[S.cat]; var r=[];
-    cats.forEach(function(c){ var fs=S.data.categories[c]||[]; fs.forEach(function(f){ if(S.vid!=="all"&&f.name!==S.vid) return; (f.chunks||[]).forEach(function(ch){ var s=sc(ch,q); if(s>0) r.push({chunk:ch,score:s,cat:c,file:f.name}); }); }); });
-    r.sort(function(a,b){return b.score-a.score}); return r.slice(0,tk);
+    var tk = Math.max(parseInt(S.set.topK) || 5, 8);
+    var cats = S.cat === "all" ? Object.keys(S.data.categories) : [S.cat];
+    var r = [];
+    cats.forEach(function(c) {
+        var fs = S.data.categories[c] || [];
+        fs.forEach(function(f) {
+            if (S.vid !== "all" && f.name !== S.vid) return;
+            (f.chunks || []).forEach(function(ch) {
+                var s = sc(ch, q);
+                if (s > 0) r.push({chunk: ch, score: s, cat: c, file: f.name});
+            });
+        });
+    });
+    r.sort(function(a, b) { return b.score - a.score; });
+    return r.slice(0, tk);
 }
 
 function sBroad(q) {
-    var cats=S.cat==="all"?Object.keys(S.data.categories):[S.cat]; var r=[]; var qw=tok(q);
-    cats.forEach(function(c){ var fs=S.data.categories[c]||[]; fs.forEach(function(f){ if(S.vid!=="all"&&f.name!==S.vid) return; var ch=f.chunks||[]; if(ch.length>0) r.push({chunk:ch[0],score:.5,cat:c,file:f.name}); ch.forEach(function(ck){ var cl=ck.toLowerCase(); var ok=false; qw.forEach(function(w){if(cl.indexOf(w)!==-1)ok=true}); if(ok) r.push({chunk:ck,score:1,cat:c,file:f.name}); }); }); });
-    return r.slice(0,6);
+    var cats = S.cat === "all" ? Object.keys(S.data.categories) : [S.cat];
+    var r = [];
+    var qw = tok(q);
+    cats.forEach(function(c) {
+        var fs = S.data.categories[c] || [];
+        fs.forEach(function(f) {
+            if (S.vid !== "all" && f.name !== S.vid) return;
+            var ch = f.chunks || [];
+            if (ch.length > 0) r.push({chunk: ch[0], score: 0.5, cat: c, file: f.name});
+            ch.forEach(function(ck) {
+                var cl = ck.toLowerCase();
+                var ok = false;
+                qw.forEach(function(w) { if (cl.indexOf(w) !== -1) ok = true; });
+                if (ok) r.push({chunk: ck, score: 1, cat: c, file: f.name});
+            });
+        });
+    });
+    return r.slice(0, 6);
 }
 
-function merge(a,b) { var seen={}; var m=[]; a.concat(b).forEach(function(i){ var k=i.chunk.slice(0,80); if(!seen[k]){seen[k]=true;m.push(i)} }); return m.slice(0,12); }
+function merge(a, b) {
+    var seen = {};
+    var m = [];
+    a.concat(b).forEach(function(i) {
+        var k = i.chunk.slice(0, 80);
+        if (!seen[k]) { seen[k] = true; m.push(i); }
+    });
+    return m.slice(0, 12);
+}
 
 function ctx(chunks) {
-    if(chunks.length===0){ var all=[]; var cats=S.cat==="all"?Object.keys(S.data.categories):[S.cat]; cats.forEach(function(c){ var fs=S.data.categories[c]||[]; fs.forEach(function(f){ if(S.vid!=="all"&&f.name!==S.vid)return; var p=(f.chunks||[]).slice(0,3).join(" "); all.push("["+fc(c)+" / "+f.name.replace(/\.(txt|pdf)$/i,"")+"]\n"+p); }); }); return all.join("\n\n---\n\n")||"No content."; }
-    return chunks.map(function(r){ return "["+fc(r.cat)+" / "+r.file.replace(/\.(txt|pdf)$/i,"")+"]\n"+r.chunk; }).join("\n\n---\n\n");
+    if (chunks.length === 0) {
+        var all = [];
+        var cats = S.cat === "all" ? Object.keys(S.data.categories) : [S.cat];
+        cats.forEach(function(c) {
+            var fs = S.data.categories[c] || [];
+            fs.forEach(function(f) {
+                if (S.vid !== "all" && f.name !== S.vid) return;
+                var p = (f.chunks || []).slice(0, 3).join(" ");
+                all.push("[" + fc(c) + " / " + f.name.replace(/\.(txt|pdf)$/i, "") + "]\n" + p);
+            });
+        });
+        return all.join("\n\n---\n\n") || "No content.";
+    }
+    return chunks.map(function(r) {
+        return "[" + fc(r.cat) + " / " + r.file.replace(/\.(txt|pdf)$/i, "") + "]\n" + r.chunk;
+    }).join("\n\n---\n\n");
 }
 
-// ── MESSAGES ──
+// ═══════════════════════════════════
+// MESSAGES
+// ═══════════════════════════════════
 function addM(role, content, streaming) {
     D.wel.style.display = "none";
-    var w = document.createElement("div"); w.className = "m " + (role==="user"?"u":"b");
-    var ic = role==="user"?"fa-user":"fa-robot";
+    var w = document.createElement("div");
+    w.className = "m " + (role === "user" ? "u" : "b");
+    var ic = role === "user" ? "fa-user" : "fa-robot";
     if (streaming) {
-        w.innerHTML = '<div class="m-av"><i class="fas '+ic+'"></i></div><div class="m-bd"><div class="m-bb stm"><div class="dots"><span></span><span></span><span></span></div></div><div class="m-ft"><span>'+tm()+'</span></div></div>';
+        w.innerHTML = '<div class="m-av"><i class="fas ' + ic + '"></i></div><div class="m-bd"><div class="m-bb stm"><div class="dots"><span></span><span></span><span></span></div></div><div class="m-ft"><span>' + tm() + '</span></div></div>';
     } else {
-        w.innerHTML = '<div class="m-av"><i class="fas '+ic+'"></i></div><div class="m-bd"><div class="m-bb">'+fm(content)+'</div><div class="m-ft"><span>'+tm()+'</span></div></div>';
+        w.innerHTML = '<div class="m-av"><i class="fas ' + ic + '"></i></div><div class="m-bd"><div class="m-bb">' + fm(content) + '</div><div class="m-ft"><span>' + tm() + '</span></div></div>';
     }
-    D.msgs.appendChild(w); sd(); return w;
+    D.msgs.appendChild(w);
+    sd();
+    return w;
 }
 
-// ── SEND ──
+// ═══════════════════════════════════
+// SEND
+// ═══════════════════════════════════
 async function send() {
-    var t = D.inp.value.trim(); if(!t||S.busy) return;
-    if(typeof puter==="undefined"||!puter.ai){toast("AI not ready","warning");return}
-    if(!S.data){toast("No data","error");return}
-    S.busy=true; D.snd.disabled=true; D.inp.value=""; D.inp.style.height="auto";
-    addM("user",t); S.hist.push({role:"user",content:t});
+    var t = D.inp.value.trim();
+    if (!t || S.busy) return;
+    if (typeof puter === "undefined" || !puter.ai) { toast("AI not ready", "warning"); return; }
+    if (!S.data) { toast("No data", "error"); return; }
 
-    var p=sPrimary(t); var b=sBroad(t); var all=merge(p,b); var c=ctx(all);
+    S.busy = true;
+    D.snd.disabled = true;
+    D.inp.value = "";
+    D.inp.style.height = "auto";
 
-    var sys="You are an expert AI assistant with full access to video transcript content.\n\n"
-        +"YOUR MISSION: Answer completely and helpfully.\n\n"
-        +"RULES:\n"
-        +"- Answer from ANY angle\n"
-        +"- If concept is covered, STILL ANSWER even if exact words differ\n"
-        +"- Combine multiple sections for complete answers\n"
-        +"- Summarize, explain, compare, list as asked\n"
-        +"- Use conversation history for follow-ups\n"
-        +"- NEVER refuse reasonable questions\n"
-        +"- Be thorough and use formatting\n\n"
-        +"TRANSCRIPTS:\n==================\n"+c+"\n==================\n\n"
-        +"Answer thoroughly.";
+    addM("user", t);
+    S.hist.push({role: "user", content: t});
 
-    var msgs=[{role:"system",content:sys}];
-    var h=S.hist.slice(-12); for(var i=0;i<h.length;i++) msgs.push(h[i]);
+    var p = sPrimary(t);
+    var b = sBroad(t);
+    var all = merge(p, b);
+    var c = ctx(all);
 
-    var model=D.model.value||"gpt-4o-mini";
-    var el=addM("bot","",true); var bb=el.querySelector(".m-bb"); var ft=el.querySelector(".m-ft"); var full="";
+    var sys = "You are an expert AI assistant with full access to video transcript content.\n\n"
+        + "YOUR MISSION: Answer completely and helpfully.\n\n"
+        + "RULES:\n"
+        + "- Answer from ANY angle\n"
+        + "- If concept is covered, STILL ANSWER even if exact words differ\n"
+        + "- Combine multiple sections for complete answers\n"
+        + "- Summarize, explain, compare, list as asked\n"
+        + "- Use conversation history for follow-ups\n"
+        + "- NEVER refuse reasonable questions\n"
+        + "- Be thorough and use formatting\n\n"
+        + "TRANSCRIPTS:\n==================\n" + c + "\n==================\n\n"
+        + "Answer thoroughly.";
+
+    var msgs = [{role: "system", content: sys}];
+    var h = S.hist.slice(-12);
+    for (var i = 0; i < h.length; i++) msgs.push(h[i]);
+
+    var model = D.model.value || "gpt-4o-mini";
+    var el = addM("bot", "", true);
+    var bb = el.querySelector(".m-bb");
+    var ft = el.querySelector(".m-ft");
+    var full = "";
 
     try {
-        var stream=await puter.ai.chat(msgs,{model:model,stream:true});
-        bb.innerHTML=""; bb.classList.add("stm");
-        for await(var part of stream){ var tk=(part&&part.text)?part.text:""; full+=tk; bb.innerHTML=fm(full); sd(); }
+        var stream = await puter.ai.chat(msgs, {model: model, stream: true});
+        bb.innerHTML = "";
+        bb.classList.add("stm");
+        for await (var part of stream) {
+            var tk = (part && part.text) ? part.text : "";
+            full += tk;
+            bb.innerHTML = fm(full);
+            sd();
+        }
         bb.classList.remove("stm");
-        if(all.length>0){ var seen={}; all.slice(0,3).forEach(function(c){ var k=fc(c.cat)+">"+c.file.replace(/\.(txt|pdf)$/i,""); if(!seen[k]){seen[k]=true;var tg=document.createElement("span");tg.className="src";tg.textContent=k;ft.appendChild(tg)} }); }
-        S.hist.push({role:"assistant",content:full});
+        if (all.length > 0) {
+            var seen = {};
+            all.slice(0, 3).forEach(function(c) {
+                var k = fc(c.cat) + " > " + c.file.replace(/\.(txt|pdf)$/i, "");
+                if (!seen[k]) {
+                    seen[k] = true;
+                    var tg = document.createElement("span");
+                    tg.className = "src";
+                    tg.textContent = k;
+                    ft.appendChild(tg);
+                }
+            });
+        }
+        S.hist.push({role: "assistant", content: full});
     } catch(err) {
         bb.classList.remove("stm");
-        bb.innerHTML='<span style="color:var(--err)">Error: '+(err.message||"Try again")+'</span>';
+        bb.innerHTML = '<span style="color:var(--err)">Error: ' + (err.message || "Try again") + '</span>';
     }
-    S.busy=false; D.snd.disabled=false; D.inp.focus();
+
+    S.busy = false;
+    D.snd.disabled = false;
+    D.inp.focus();
 }
 
-// ── EVENTS ──
+// ═══════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════
 D.snd.addEventListener("click", send);
-D.inp.addEventListener("keydown", function(e){ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()} });
-D.inp.addEventListener("input", function(){ D.inp.style.height="auto"; D.inp.style.height=Math.min(D.inp.scrollHeight,100)+"px"; });
+D.inp.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
+});
+D.inp.addEventListener("input", function() {
+    D.inp.style.height = "auto";
+    D.inp.style.height = Math.min(D.inp.scrollHeight, 100) + "px";
+});
 
-// ── BOOT ──
+// ═══════════════════════════════════
+// BOOT
+// ═══════════════════════════════════
 async function boot() {
     dbg("TranscriptBot starting...");
     D.status.textContent = "Loading...";
     D.stat.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
-    // Show debug automatically on first load
+    // Show debug on start
     D.dbgBox.classList.add("show");
 
     var data = await ldData();
@@ -522,7 +731,7 @@ async function boot() {
         D.stat.innerHTML = '<span style="color:var(--err)">No data found</span>';
         disable("No transcripts found");
         D.welH.textContent = "No Content Yet";
-        D.welP.textContent = "Could not load transcripts. Tap the bug icon (top-right) to see details. Make sure the GitHub raw URL is set in admin panel.";
+        D.welP.textContent = "Tap bug icon for details. Make sure raw URL is set in admin.";
         D.chips.style.display = "none";
         D.fbar.style.display = "none";
         return;
@@ -535,7 +744,9 @@ async function boot() {
     dbg("SUCCESS: " + tf + " files, " + tc + " categories", "ok");
     D.status.textContent = tf + " files, " + tc + " cats";
 
-    applySets(); buildCat(); buildChips();
+    applySets();
+    buildCat();
+    buildChips();
 
     // Hide debug after success
     setTimeout(function() { D.dbgBox.classList.remove("show"); }, 3000);
@@ -544,13 +755,18 @@ async function boot() {
     toast("Loaded " + tf + " transcripts", "success");
 
     waitAI(15000).then(function() {
-        S.rdy = true; enable(); online(true);
+        S.rdy = true;
+        enable();
+        online(true);
         D.stat.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready';
         dbg("AI connected", "ok");
     });
 
     setTimeout(function() {
-        if (!S.rdy) { S.rdy=true; enable(); online(true);
+        if (!S.rdy) {
+            S.rdy = true;
+            enable();
+            online(true);
             D.stat.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready';
         }
     }, 3000);
