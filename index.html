@@ -30,11 +30,6 @@
         .mdl i{color:var(--p);font-size:10px}
         .mdl select{background:transparent;border:none;color:var(--t2);font-size:10px;font-family:inherit;outline:none;cursor:pointer}
         .mdl select option{background:var(--b3);color:var(--t1)}
-        .dbg-toggle{position:fixed;top:8px;right:8px;z-index:999;width:28px;height:28px;background:var(--b3);border:1px solid var(--br2);border-radius:6px;color:var(--t3);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-        .dbg-box{flex-shrink:0;padding:8px 16px;background:#0a0a12;border-bottom:1px solid var(--br2);font-size:10px;color:var(--t3);font-family:monospace;max-height:150px;overflow-y:auto;display:none}
-        .dbg-box.show{display:block}
-        .dbg-box .line{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
-        .dbg-box .ok{color:var(--ok)}.dbg-box .bad{color:var(--err)}.dbg-box .wrn{color:var(--warn)}
         .fbar{flex-shrink:0;padding:8px 16px;background:var(--b1);border-bottom:1px solid var(--br);display:flex;gap:8px;align-items:center;z-index:15;flex-wrap:wrap}
         .fgroup{display:flex;align-items:center;gap:5px}
         .fgroup label{font-size:9px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:3px;white-space:nowrap}
@@ -74,91 +69,31 @@
         @keyframes db{0%,80%,100%{transform:scale(1);opacity:.3}40%{transform:scale(1.3);opacity:1}}
         .stm::after{content:'';animation:blk .7s infinite;color:var(--p);margin-left:2px}
         @keyframes blk{0%,100%{opacity:1}50%{opacity:0}}
-
-        /* FOLLOW-UP OPTIONS BOX */
-        .followup-box{
-            margin-top:6px;background:var(--b3);border:1px solid var(--br2);
-            border-radius:12px;overflow:hidden;animation:ms .3s cubic-bezier(.16,1,.3,1);
-        }
-        .followup-header{
-            display:flex;align-items:center;gap:6px;padding:10px 14px;
-            border-bottom:1px solid var(--br);font-size:11px;font-weight:700;
-            color:var(--teal);text-transform:uppercase;letter-spacing:.04em;
-        }
+        .followup-box{margin-top:6px;background:var(--b3);border:1px solid var(--br2);border-radius:12px;overflow:hidden;animation:ms .3s cubic-bezier(.16,1,.3,1)}
+        .followup-header{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--br);font-size:11px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:.04em}
         .followup-header i{font-size:12px}
         .followup-options{padding:8px;display:flex;flex-direction:column;gap:4px}
-        .followup-opt{
-            display:flex;align-items:center;gap:8px;padding:9px 12px;
-            background:var(--b4);border:1px solid var(--br);border-radius:8px;
-            cursor:pointer;transition:all .2s;font-size:12px;color:var(--t2);
-        }
-        .followup-opt:hover{
-            background:var(--ps);border-color:var(--pg);color:var(--pt);
-            transform:translateX(4px);
-        }
-        .followup-opt .opt-num{
-            width:20px;height:20px;background:var(--pg);color:var(--pt);
-            border-radius:6px;display:flex;align-items:center;justify-content:center;
-            font-size:10px;font-weight:700;flex-shrink:0;
-        }
+        .followup-opt{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--b4);border:1px solid var(--br);border-radius:8px;cursor:pointer;transition:all .2s;font-size:12px;color:var(--t2)}
+        .followup-opt:hover{background:var(--ps);border-color:var(--pg);color:var(--pt);transform:translateX(4px)}
+        .followup-opt .opt-num{width:20px;height:20px;background:var(--pg);color:var(--pt);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
         .followup-opt .opt-text{flex:1;line-height:1.4}
-
-        /* THINK BOX — user's own answer */
-        .think-box{
-            margin-top:6px;background:var(--b3);border:1px solid var(--br2);
-            border-radius:12px;overflow:hidden;animation:ms .3s cubic-bezier(.16,1,.3,1);
-        }
-        .think-header{
-            display:flex;align-items:center;gap:6px;padding:10px 14px;
-            border-bottom:1px solid var(--br);font-size:11px;font-weight:700;
-            color:var(--warn);text-transform:uppercase;letter-spacing:.04em;
-        }
+        .think-box{margin-top:6px;background:var(--b3);border:1px solid var(--br2);border-radius:12px;overflow:hidden;animation:ms .3s cubic-bezier(.16,1,.3,1)}
+        .think-header{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--br);font-size:11px;font-weight:700;color:var(--warn);text-transform:uppercase;letter-spacing:.04em}
         .think-header i{font-size:12px}
         .think-body{padding:10px}
-        .think-input{
-            width:100%;background:var(--b4);border:1px solid var(--br2);
-            border-radius:8px;padding:10px 12px;color:var(--t1);font-size:12px;
-            font-family:inherit;outline:none;resize:vertical;min-height:50px;
-            line-height:1.5;transition:border-color .2s;
-        }
+        .think-input{width:100%;background:var(--b4);border:1px solid var(--br2);border-radius:8px;padding:10px 12px;color:var(--t1);font-size:12px;font-family:inherit;outline:none;resize:vertical;min-height:50px;line-height:1.5;transition:border-color .2s}
         .think-input:focus{border-color:var(--pg)}
         .think-input::placeholder{color:var(--t4)}
-        .think-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
-        .think-btn{
-            padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;
-            cursor:pointer;font-family:inherit;display:flex;align-items:center;
-            gap:5px;transition:all .2s;border:none;
-        }
+        .think-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end;flex-wrap:wrap}
+        .think-btn{padding:7px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;transition:all .2s;border:none}
         .think-submit{background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;box-shadow:0 2px 8px rgba(124,58,237,.2)}
         .think-submit:hover{transform:translateY(-1px)}
         .think-compare{background:var(--b4);color:var(--teal);border:1px solid rgba(45,212,191,.2)}
         .think-compare:hover{background:rgba(45,212,191,.06)}
         .think-skip{background:transparent;color:var(--t3);border:1px solid var(--br2)}
         .think-skip:hover{color:var(--t2)}
-
-        /* COMPARISON BOX */
-        .compare-box{
-            margin-top:6px;background:var(--b3);border:1px solid rgba(45,212,191,.15);
-            border-radius:12px;overflow:hidden;animation:ms .3s cubic-bezier(.16,1,.3,1);
-        }
-        .compare-header{
-            display:flex;align-items:center;gap:6px;padding:10px 14px;
-            border-bottom:1px solid var(--br);font-size:11px;font-weight:700;
-            color:var(--teal);text-transform:uppercase;letter-spacing:.04em;
-        }
-        .compare-header i{font-size:12px}
-        .compare-body{padding:12px;font-size:12px;color:var(--t2);line-height:1.7}
-        .compare-body strong{color:var(--teal)}
-
-        /* IMPROVEMENT BADGE */
-        .improve-badge{
-            display:inline-flex;align-items:center;gap:4px;
-            background:rgba(96,165,250,.08);color:var(--blue);
-            padding:3px 8px;border-radius:99px;font-size:9px;font-weight:600;
-            border:1px solid rgba(96,165,250,.15);margin-top:4px;
-        }
+        .improve-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(96,165,250,.08);color:var(--blue);padding:3px 8px;border-radius:99px;font-size:9px;font-weight:600;border:1px solid rgba(96,165,250,.15);margin-top:4px}
         .improve-badge i{font-size:8px}
-
         .inp-area{flex-shrink:0;padding:6px 16px 12px;background:var(--b0);border-top:1px solid var(--br);z-index:10}
         .inp-box{max-width:700px;margin:0 auto;background:var(--b2);border:1.5px solid var(--br2);border-radius:12px;overflow:hidden;transition:border-color .2s,box-shadow .2s}
         .inp-box:focus-within{border-color:var(--pg);box-shadow:0 0 0 3px rgba(124,58,237,.05)}
@@ -177,7 +112,6 @@
     </style>
 </head>
 <body>
-<button class="dbg-toggle" id="dbgToggle" title="Debug"><i class="fas fa-bug"></i></button>
 <div class="app">
     <div class="topbar">
         <div class="topbar-l">
@@ -195,7 +129,6 @@
             </div>
         </div>
     </div>
-    <div class="dbg-box" id="dbgBox"></div>
     <div class="fbar" id="fbar">
         <div class="fgroup"><label><i class="fas fa-folder"></i> Category</label><select class="fsel" id="catSel"></select></div>
         <div class="fgroup" id="vidGroup" style="display:none"><label><i class="fas fa-play-circle"></i> Video</label><select class="fsel" id="vidSel"></select></div>
@@ -225,7 +158,6 @@
 (function(){
 "use strict";
 
-// *** CHANGE THIS TO YOUR RAW GITHUB URL ***
 var HARDCODED_URL = "https://raw.githubusercontent.com/ProRayyan/Answer-my-questions/main/data/transcripts.json";
 
 var S = {data:null, set:{}, cat:"all", vid:"all", hist:[], busy:false, rdy:false, lastBotAnswer:""};
@@ -237,20 +169,8 @@ var D = {
     fbar:$("fbar"),model:$("modelPicker"),
     chat:$("chat"),wel:$("wel"),welH:$("welH"),welP:$("welP"),
     chips:$("chips"),msgs:$("msgs"),
-    inp:$("inp"),snd:$("snd"),stat:$("stat"),
-    tbox:$("tbox"),dbgBox:$("dbgBox"),dbgToggle:$("dbgToggle")
+    inp:$("inp"),snd:$("snd"),stat:$("stat"),tbox:$("tbox")
 };
-
-var dbgLines=[];
-function dbg(msg,type){
-    type=type||"";dbgLines.push({msg:msg,type:type});
-    var html="";for(var i=0;i<dbgLines.length;i++){
-        var cls=dbgLines[i].type==="ok"?"ok":dbgLines[i].type==="bad"?"bad":dbgLines[i].type==="wrn"?"wrn":"";
-        html+='<div class="line '+cls+'">'+dbgLines[i].msg+'</div>';
-    }
-    D.dbgBox.innerHTML=html;D.dbgBox.scrollTop=D.dbgBox.scrollHeight;
-}
-D.dbgToggle.addEventListener("click",function(){D.dbgBox.classList.toggle("show")});
 
 function toast(m,t){
     t=t||"info";var ic={success:"fa-check-circle",error:"fa-times-circle",warning:"fa-exclamation-triangle",info:"fa-info-circle"};
@@ -273,71 +193,53 @@ function enable(){D.inp.disabled=false;D.snd.disabled=false;D.inp.placeholder="A
 function disable(m){D.inp.disabled=true;D.snd.disabled=true;D.inp.placeholder=m||"Wait..."}
 function sl(ms){return new Promise(function(r){setTimeout(r,ms)})}
 
-// DATA
 function ldLocal(){
-    dbg("Checking localStorage...");
     try{
         var raw=localStorage.getItem("tb_export");if(!raw)raw=localStorage.getItem("tb_admin_db");
-        if(!raw){dbg("No localStorage data","wrn");return null}
-        dbg("Found localStorage: "+raw.length+" chars");
+        if(!raw)return null;
         var trimmed=raw.trim();
-        if(trimmed.charAt(0)!=="{"){dbg("localStorage not JSON","bad");localStorage.removeItem("tb_export");localStorage.removeItem("tb_admin_db");return null}
+        if(trimmed.charAt(0)!=="{"){localStorage.removeItem("tb_export");localStorage.removeItem("tb_admin_db");return null}
         var d=JSON.parse(trimmed);
-        if(d&&d.categories&&Object.keys(d.categories).length>0){
-            var cats=Object.keys(d.categories).length;var files=0;var keys=Object.keys(d.categories);
-            for(var i=0;i<keys.length;i++)files+=d.categories[keys[i]].length;
-            dbg("localStorage OK: "+cats+" cats, "+files+" files","ok");return d;
-        }
-        dbg("localStorage empty","wrn");return null;
-    }catch(e){dbg("localStorage error: "+e.message,"bad");localStorage.removeItem("tb_export");localStorage.removeItem("tb_admin_db");return null}
+        if(d&&d.categories&&Object.keys(d.categories).length>0)return d;
+        return null;
+    }catch(e){localStorage.removeItem("tb_export");localStorage.removeItem("tb_admin_db");return null}
 }
 
 function ldUrl(url,timeout){
-    timeout=timeout||30000;dbg("Fetching: "+url.slice(0,80));
+    timeout=timeout||30000;
     return new Promise(function(resolve){
         var done=false;
-        var timer=setTimeout(function(){if(!done){done=true;dbg("TIMEOUT","bad");resolve(null)}},timeout);
+        var timer=setTimeout(function(){if(!done){done=true;resolve(null)}},timeout);
         fetch(url+"?nocache="+Date.now()).then(function(r){
-            dbg("HTTP "+r.status);
-            var ct=r.headers.get("content-type")||"unknown";dbg("Type: "+ct);
-            if(!r.ok){dbg("HTTP error: "+r.status,"bad");if(!done){done=true;clearTimeout(timer);resolve(null)}return null}
-            if(ct.indexOf("text/html")!==-1){dbg("WARNING: Got HTML not JSON!","bad")}
+            if(!r.ok){if(!done){done=true;clearTimeout(timer);resolve(null)}return null}
             return r.text();
         }).then(function(text){
             if(done||!text)return;done=true;clearTimeout(timer);
-            dbg("Got "+text.length+" chars");dbg("First 100: "+text.slice(0,100));
             var trimmed=text.trim();
-            if(trimmed.charAt(0)!=="{"&&trimmed.charAt(0)!=="["){dbg("NOT JSON!","bad");resolve(null);return}
+            if(trimmed.charAt(0)!=="{"&&trimmed.charAt(0)!=="["){resolve(null);return}
             try{
                 var d=JSON.parse(trimmed);
                 if(d&&d.categories&&Object.keys(d.categories).length>0){
-                    var cats=Object.keys(d.categories).length;dbg("Parsed OK: "+cats+" cats","ok");
-                    try{localStorage.setItem("tb_export",trimmed);dbg("Cached","ok")}catch(e){dbg("Cache fail: "+e.message,"wrn")}
+                    try{localStorage.setItem("tb_export",trimmed)}catch(e){}
                     resolve(d);
-                }else{dbg("No categories","bad");resolve(null)}
-            }catch(e){
-                dbg("JSON ERROR: "+e.message,"bad");
-                var match=e.message.match(/position (\d+)/i);
-                if(match){var pos=parseInt(match[1]);dbg("Near: ..."+trimmed.slice(Math.max(0,pos-30),pos+30)+"...","bad")}
-                resolve(null);
-            }
-        }).catch(function(e){if(!done){done=true;clearTimeout(timer);dbg("Network: "+e.message,"bad");resolve(null)}});
+                }else{resolve(null)}
+            }catch(e){resolve(null)}
+        }).catch(function(){if(!done){done=true;clearTimeout(timer);resolve(null)}});
     });
 }
 
 async function ldData(){
     var d=ldLocal();if(d)return d;
-    dbg("Trying hardcoded URL...");D.status.textContent="Loading...";
+    D.status.textContent="Loading...";
     d=await ldUrl(HARDCODED_URL,60000);if(d)return d;
     var url=localStorage.getItem("tb_raw_url");
-    if(url&&url!==HARDCODED_URL){dbg("Trying saved URL...");d=await ldUrl(url,60000);if(d)return d}
-    dbg("Trying ./data/transcripts.json...");d=await ldUrl("./data/transcripts.json",15000);if(d)return d;
-    dbg("ALL failed","bad");return null;
+    if(url&&url!==HARDCODED_URL){d=await ldUrl(url,60000);if(d)return d}
+    d=await ldUrl("./data/transcripts.json",15000);if(d)return d;
+    return null;
 }
 
 async function waitAI(mx){mx=mx||12000;var t=0;while(t<mx){if(typeof puter!=="undefined"&&puter.ai&&typeof puter.ai.chat==="function")return true;await sl(250);t+=250}return false}
 
-// DROPDOWNS
 function buildCat(){
     D.catSel.innerHTML="";var cats=Object.keys(S.data.categories);
     var o=document.createElement("option");o.value="all";o.textContent="All ("+cntAll()+")";D.catSel.appendChild(o);
@@ -357,7 +259,6 @@ D.vidSel.addEventListener("change",function(){S.vid=D.vidSel.value});
 function filesFor(c){if(c==="all"){var a=[];var k=Object.keys(S.data.categories);for(var i=0;i<k.length;i++){var f=S.data.categories[k[i]];for(var j=0;j<f.length;j++)a.push(f[j])}return a}return S.data.categories[c]||[]}
 function cntAll(){var n=0;var k=Object.keys(S.data.categories);for(var i=0;i<k.length;i++)n+=S.data.categories[k[i]].length;return n}
 
-// SUGGESTIONS
 function buildChips(){
     D.chips.innerHTML="";
     var sg=(S.set.suggestions&&S.set.suggestions.length)?S.set.suggestions:["What topics are covered?","Summarize the main points","Explain this simply"];
@@ -370,7 +271,6 @@ function applySets(){
     if(s.defaultModel){var o=D.model.querySelector('option[value="'+s.defaultModel+'"]');if(o)o.selected=true}
 }
 
-// SEARCH
 function tok(t){return String(t).toLowerCase().replace(/[^a-z0-9\s]/g," ").split(/\s+/).filter(function(w){return w.length>1})}
 function sc(chunk,q){
     var ct=tok(chunk);var qt=tok(q);var cs=new Set(ct);var s=0;
@@ -394,7 +294,6 @@ function ctx(chunks){
     return chunks.map(function(r){return "["+fc(r.cat)+" / "+r.file.replace(/\.(txt|pdf)$/i,"")+"]\n"+r.chunk}).join("\n\n---\n\n");
 }
 
-// MESSAGES
 function addM(role,content,streaming){
     D.wel.style.display="none";
     var w=document.createElement("div");w.className="m "+(role==="user"?"u":"b");
@@ -404,452 +303,183 @@ function addM(role,content,streaming){
     D.msgs.appendChild(w);sd();return w;
 }
 
-// FOLLOW-UP OPTIONS
-function addFollowUpOptions(parentEl, question, answer) {
-    var suggestions = generateFollowUps(question, answer);
-    if (suggestions.length === 0) return;
-
-    var box = document.createElement("div");
-    box.className = "followup-box";
-
-    var header = document.createElement("div");
-    header.className = "followup-header";
-    header.innerHTML = '<i class="fas fa-lightbulb"></i> Dig Deeper — Choose a follow-up';
-
-    var opts = document.createElement("div");
-    opts.className = "followup-options";
-
-    suggestions.forEach(function(sug, idx) {
-        var opt = document.createElement("div");
-        opt.className = "followup-opt";
-        opt.innerHTML = '<div class="opt-num">' + (idx + 1) + '</div><div class="opt-text">' + sug + '</div>';
-        opt.addEventListener("click", function() {
-            box.remove();
-            removeThinkBox();
-            D.inp.value = sug;
-            send();
-        });
+function addFollowUpOptions(parentEl,question,answer){
+    var suggestions=generateFollowUps(question,answer);
+    if(suggestions.length===0)return;
+    var box=document.createElement("div");box.className="followup-box";
+    var header=document.createElement("div");header.className="followup-header";
+    header.innerHTML='<i class="fas fa-lightbulb"></i> Dig Deeper \u2014 Choose a follow-up';
+    var opts=document.createElement("div");opts.className="followup-options";
+    suggestions.forEach(function(sug,idx){
+        var opt=document.createElement("div");opt.className="followup-opt";
+        opt.innerHTML='<div class="opt-num">'+(idx+1)+'</div><div class="opt-text">'+sug+'</div>';
+        opt.addEventListener("click",function(){box.remove();removeThinkBox();D.inp.value=sug;send()});
         opts.appendChild(opt);
     });
-
-    box.appendChild(header);
-    box.appendChild(opts);
-
-    var bd = parentEl.querySelector(".m-bd");
-    if (bd) bd.appendChild(box);
-    sd();
+    box.appendChild(header);box.appendChild(opts);
+    var bd=parentEl.querySelector(".m-bd");if(bd)bd.appendChild(box);sd();
 }
 
-// THINK BOX — user writes own answer
-function addThinkBox(parentEl, question) {
-    var box = document.createElement("div");
-    box.className = "think-box";
-    box.id = "thinkBox";
+function addThinkBox(parentEl,question){
+    var box=document.createElement("div");box.className="think-box";box.id="thinkBox";
+    var header=document.createElement("div");header.className="think-header";
+    header.innerHTML='<i class="fas fa-brain"></i> Your Turn \u2014 What do you think?';
+    var body=document.createElement("div");body.className="think-body";
+    var input=document.createElement("textarea");input.className="think-input";
+    input.placeholder="Write your own answer or thoughts here...";input.rows=3;
+    var actions=document.createElement("div");actions.className="think-actions";
 
-    var header = document.createElement("div");
-    header.className = "think-header";
-    header.innerHTML = '<i class="fas fa-brain"></i> Your Turn — What do you think?';
-
-    var body = document.createElement("div");
-    body.className = "think-body";
-
-    var input = document.createElement("textarea");
-    input.className = "think-input";
-    input.placeholder = "Write your own answer or thoughts here...";
-    input.rows = 3;
-
-    var actions = document.createElement("div");
-    actions.className = "think-actions";
-
-    var compareBtn = document.createElement("button");
-    compareBtn.className = "think-btn think-compare";
-    compareBtn.innerHTML = '<i class="fas fa-balance-scale"></i> Compare with AI';
-    compareBtn.addEventListener("click", function() {
-        var userAnswer = input.value.trim();
-        if (!userAnswer) { toast("Write your answer first", "warning"); return; }
-        box.remove();
-        compareAnswers(question, userAnswer, S.lastBotAnswer);
+    var compareBtn=document.createElement("button");compareBtn.className="think-btn think-compare";
+    compareBtn.innerHTML='<i class="fas fa-balance-scale"></i> Compare with AI';
+    compareBtn.addEventListener("click",function(){
+        var userAnswer=input.value.trim();
+        if(!userAnswer){toast("Write your answer first","warning");return}
+        box.remove();compareAnswers(question,userAnswer,S.lastBotAnswer);
     });
 
-    var submitBtn = document.createElement("button");
-    submitBtn.className = "think-btn think-submit";
-    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Ask AI to review';
-    submitBtn.addEventListener("click", function() {
-        var userAnswer = input.value.trim();
-        if (!userAnswer) { toast("Write something first", "warning"); return; }
-        box.remove();
-        reviewUserAnswer(question, userAnswer);
+    var submitBtn=document.createElement("button");submitBtn.className="think-btn think-submit";
+    submitBtn.innerHTML='<i class="fas fa-paper-plane"></i> Ask AI to review';
+    submitBtn.addEventListener("click",function(){
+        var userAnswer=input.value.trim();
+        if(!userAnswer){toast("Write something first","warning");return}
+        box.remove();reviewUserAnswer(question,userAnswer);
     });
 
-    var skipBtn = document.createElement("button");
-    skipBtn.className = "think-btn think-skip";
-    skipBtn.innerHTML = '<i class="fas fa-forward"></i> Skip';
-    skipBtn.addEventListener("click", function() {
-        box.remove();
-    });
+    var skipBtn=document.createElement("button");skipBtn.className="think-btn think-skip";
+    skipBtn.innerHTML='<i class="fas fa-forward"></i> Skip';
+    skipBtn.addEventListener("click",function(){box.remove()});
 
-    actions.appendChild(skipBtn);
-    actions.appendChild(compareBtn);
-    actions.appendChild(submitBtn);
-    body.appendChild(input);
-    body.appendChild(actions);
-    box.appendChild(header);
-    box.appendChild(body);
-
-    var bd = parentEl.querySelector(".m-bd");
-    if (bd) bd.appendChild(box);
-    sd();
-
-    // Focus the textarea
-    setTimeout(function() { input.focus(); }, 200);
+    actions.appendChild(skipBtn);actions.appendChild(compareBtn);actions.appendChild(submitBtn);
+    body.appendChild(input);body.appendChild(actions);
+    box.appendChild(header);box.appendChild(body);
+    var bd=parentEl.querySelector(".m-bd");if(bd)bd.appendChild(box);sd();
+    setTimeout(function(){input.focus()},200);
 }
 
-function removeThinkBox() {
-    var existing = document.getElementById("thinkBox");
-    if (existing) existing.remove();
-}
+function removeThinkBox(){var existing=document.getElementById("thinkBox");if(existing)existing.remove()}
 
-// GENERATE FOLLOW-UPS based on question and answer
-function generateFollowUps(question, answer) {
-    var followUps = [];
-    var ql = question.toLowerCase();
-    var al = answer.toLowerCase();
-
-    // Always add an "explain more" option
+function generateFollowUps(question,answer){
+    var followUps=[];var ql=question.toLowerCase();var al=answer.toLowerCase();
     followUps.push("Can you explain this in more detail with examples?");
-
-    // If answer mentions concepts, ask about them
-    if (al.indexOf("however") !== -1 || al.indexOf("but") !== -1 || al.indexOf("although") !== -1) {
-        followUps.push("What are the exceptions or edge cases?");
-    }
-
-    if (al.indexOf("step") !== -1 || al.indexOf("process") !== -1 || al.indexOf("first") !== -1) {
-        followUps.push("Can you break this down step by step?");
-    }
-
-    if (al.indexOf("important") !== -1 || al.indexOf("key") !== -1 || al.indexOf("main") !== -1) {
-        followUps.push("Why is this important? What happens if we ignore it?");
-    }
-
-    if (al.indexOf("example") === -1) {
-        followUps.push("Can you give me a real-world example?");
-    }
-
-    if (ql.indexOf("what") !== -1) {
-        followUps.push("How does this compare to alternatives?");
-    }
-
-    if (ql.indexOf("how") !== -1) {
-        followUps.push("What are common mistakes to avoid?");
-    }
-
+    if(al.indexOf("however")!==-1||al.indexOf("but")!==-1||al.indexOf("although")!==-1){followUps.push("What are the exceptions or edge cases?")}
+    if(al.indexOf("step")!==-1||al.indexOf("process")!==-1||al.indexOf("first")!==-1){followUps.push("Can you break this down step by step?")}
+    if(al.indexOf("important")!==-1||al.indexOf("key")!==-1||al.indexOf("main")!==-1){followUps.push("Why is this important? What happens if we ignore it?")}
+    if(al.indexOf("example")===-1){followUps.push("Can you give me a real-world example?")}
+    if(ql.indexOf("what")!==-1){followUps.push("How does this compare to alternatives?")}
+    if(ql.indexOf("how")!==-1){followUps.push("What are common mistakes to avoid?")}
     followUps.push("Summarize the key takeaways in 3 bullet points");
-
-    // Return max 4 unique follow-ups
-    var unique = [];
-    var seen = {};
-    for (var i = 0; i < followUps.length && unique.length < 4; i++) {
-        if (!seen[followUps[i]]) {
-            seen[followUps[i]] = true;
-            unique.push(followUps[i]);
-        }
-    }
+    var unique=[];var seen={};
+    for(var i=0;i<followUps.length&&unique.length<4;i++){if(!seen[followUps[i]]){seen[followUps[i]]=true;unique.push(followUps[i])}}
     return unique;
 }
 
-// COMPARE user answer with AI answer
-async function compareAnswers(question, userAnswer, aiAnswer) {
-    if (!aiAnswer) { toast("No AI answer to compare", "warning"); return; }
-    if (typeof puter === "undefined" || !puter.ai) { toast("AI not ready", "warning"); return; }
-
-    S.busy = true;
-    D.snd.disabled = true;
-
-    // Show user's answer as a message
-    addM("user", "My answer: " + userAnswer);
-    S.hist.push({role: "user", content: "My answer to the question '" + question + "': " + userAnswer});
-
-    var botEl = addM("bot", "", true);
-    var bb = botEl.querySelector(".m-bb");
-    var ft = botEl.querySelector(".m-ft");
-
-    var comparePrompt = "The user was asked: '" + question + "'\n\n"
-        + "The AI's answer was:\n" + aiAnswer + "\n\n"
-        + "The user's own answer was:\n" + userAnswer + "\n\n"
-        + "Compare these two answers. Be encouraging and constructive:\n"
-        + "1. What the user got RIGHT (praise specific parts)\n"
-        + "2. What the user MISSED (mention gently)\n"
-        + "3. What the user added that the AI didn't mention (if anything)\n"
-        + "4. Give a quality score out of 10\n"
-        + "5. One tip to improve their understanding\n\n"
-        + "Be friendly, encouraging, and specific. Use emojis.";
-
-    var msgs = [
-        {role: "system", content: "You are a friendly tutor who compares student answers with reference answers. Be encouraging but honest."},
-        {role: "user", content: comparePrompt}
-    ];
-
-    var model = D.model.value || "gpt-4o-mini";
-    var full = "";
-
-    try {
-        var stream = await puter.ai.chat(msgs, {model: model, stream: true});
-        bb.innerHTML = "";
-        bb.classList.add("stm");
-        for await (var part of stream) {
-            var tk = (part && part.text) ? part.text : "";
-            full += tk;
-            bb.innerHTML = fm(full);
-            sd();
-        }
+async function compareAnswers(question,userAnswer,aiAnswer){
+    if(!aiAnswer){toast("No AI answer to compare","warning");return}
+    if(typeof puter==="undefined"||!puter.ai){toast("AI not ready","warning");return}
+    S.busy=true;D.snd.disabled=true;
+    addM("user","My answer: "+userAnswer);
+    S.hist.push({role:"user",content:"My answer to '"+question+"': "+userAnswer});
+    var botEl=addM("bot","",true);var bb=botEl.querySelector(".m-bb");var ft=botEl.querySelector(".m-ft");
+    var comparePrompt="The user was asked: '"+question+"'\n\nThe AI's answer was:\n"+aiAnswer+"\n\nThe user's own answer was:\n"+userAnswer+"\n\nCompare these two answers. Be encouraging and constructive:\n1. What the user got RIGHT (praise specific parts)\n2. What the user MISSED (mention gently)\n3. What the user added that the AI didn't mention (if anything)\n4. Give a quality score out of 10\n5. One tip to improve their understanding\n\nBe friendly, encouraging, and specific. Use emojis.";
+    var msgs=[{role:"system",content:"You are a friendly tutor who compares student answers with reference answers. Be encouraging but honest."},{role:"user",content:comparePrompt}];
+    var model=D.model.value||"gpt-4o-mini";var full="";
+    try{
+        var stream=await puter.ai.chat(msgs,{model:model,stream:true});
+        bb.innerHTML="";bb.classList.add("stm");
+        for await(var part of stream){var tk=(part&&part.text)?part.text:"";full+=tk;bb.innerHTML=fm(full);sd()}
         bb.classList.remove("stm");
-
-        // Add badge
-        var badge = document.createElement("div");
-        badge.className = "improve-badge";
-        badge.innerHTML = '<i class="fas fa-graduation-cap"></i> Learning Comparison';
-        ft.appendChild(badge);
-
-        S.hist.push({role: "assistant", content: full});
-        S.lastBotAnswer = full;
-
-    } catch(err) {
-        bb.classList.remove("stm");
-        bb.innerHTML = '<span style="color:var(--err)">Error: ' + (err.message || "Try again") + '</span>';
-    }
-
-    S.busy = false;
-    D.snd.disabled = false;
-    D.inp.focus();
+        var badge=document.createElement("div");badge.className="improve-badge";
+        badge.innerHTML='<i class="fas fa-graduation-cap"></i> Learning Comparison';ft.appendChild(badge);
+        S.hist.push({role:"assistant",content:full});S.lastBotAnswer=full;
+    }catch(err){bb.classList.remove("stm");bb.innerHTML='<span style="color:var(--err)">Error: '+(err.message||"Try again")+'</span>'}
+    S.busy=false;D.snd.disabled=false;D.inp.focus();
 }
 
-// REVIEW user's answer
-async function reviewUserAnswer(question, userAnswer) {
-    if (typeof puter === "undefined" || !puter.ai) { toast("AI not ready", "warning"); return; }
-
-    S.busy = true;
-    D.snd.disabled = true;
-
-    addM("user", "Review my answer: " + userAnswer);
-    S.hist.push({role: "user", content: "Please review my answer to '" + question + "': " + userAnswer});
-
-    var p = sPrimary(question);
-    var b = sBroad(question);
-    var all = merge(p, b);
-    var c = ctx(all);
-
-    var botEl = addM("bot", "", true);
-    var bb = botEl.querySelector(".m-bb");
-    var ft = botEl.querySelector(".m-ft");
-
-    var reviewPrompt = "The user tried to answer this question: '" + question + "'\n\n"
-        + "Their answer: " + userAnswer + "\n\n"
-        + "Reference transcripts:\n" + c + "\n\n"
-        + "Review their answer:\n"
-        + "1. Rate accuracy (out of 10) based on the transcript content\n"
-        + "2. What they got correct\n"
-        + "3. What they missed or got wrong\n"
-        + "4. The complete correct answer from the transcripts\n"
-        + "5. A tip for better understanding\n\n"
-        + "Be encouraging, specific, and helpful. Use emojis.";
-
-    var msgs = [
-        {role: "system", content: "You are a friendly tutor reviewing student answers against video transcript content. Be encouraging but accurate."},
-        {role: "user", content: reviewPrompt}
-    ];
-
-    var model = D.model.value || "gpt-4o-mini";
-    var full = "";
-
-    try {
-        var stream = await puter.ai.chat(msgs, {model: model, stream: true});
-        bb.innerHTML = "";
-        bb.classList.add("stm");
-        for await (var part of stream) {
-            var tk = (part && part.text) ? part.text : "";
-            full += tk;
-            bb.innerHTML = fm(full);
-            sd();
-        }
+async function reviewUserAnswer(question,userAnswer){
+    if(typeof puter==="undefined"||!puter.ai){toast("AI not ready","warning");return}
+    S.busy=true;D.snd.disabled=true;
+    addM("user","Review my answer: "+userAnswer);
+    S.hist.push({role:"user",content:"Please review my answer to '"+question+"': "+userAnswer});
+    var p=sPrimary(question);var b=sBroad(question);var all=merge(p,b);var c=ctx(all);
+    var botEl=addM("bot","",true);var bb=botEl.querySelector(".m-bb");var ft=botEl.querySelector(".m-ft");
+    var reviewPrompt="The user tried to answer: '"+question+"'\n\nTheir answer: "+userAnswer+"\n\nReference transcripts:\n"+c+"\n\nReview their answer:\n1. Rate accuracy (out of 10)\n2. What they got correct\n3. What they missed or got wrong\n4. The complete correct answer\n5. A tip for better understanding\n\nBe encouraging and specific. Use emojis.";
+    var msgs=[{role:"system",content:"You are a friendly tutor reviewing student answers against video transcript content. Be encouraging but accurate."},{role:"user",content:reviewPrompt}];
+    var model=D.model.value||"gpt-4o-mini";var full="";
+    try{
+        var stream=await puter.ai.chat(msgs,{model:model,stream:true});
+        bb.innerHTML="";bb.classList.add("stm");
+        for await(var part of stream){var tk=(part&&part.text)?part.text:"";full+=tk;bb.innerHTML=fm(full);sd()}
         bb.classList.remove("stm");
-
-        var badge = document.createElement("div");
-        badge.className = "improve-badge";
-        badge.innerHTML = '<i class="fas fa-star"></i> Answer Review';
-        ft.appendChild(badge);
-
-        S.hist.push({role: "assistant", content: full});
-        S.lastBotAnswer = full;
-
-        // Add follow-ups after review
-        addFollowUpOptions(botEl, question, full);
-
-    } catch(err) {
-        bb.classList.remove("stm");
-        bb.innerHTML = '<span style="color:var(--err)">Error: ' + (err.message || "Try again") + '</span>';
-    }
-
-    S.busy = false;
-    D.snd.disabled = false;
-    D.inp.focus();
+        var badge=document.createElement("div");badge.className="improve-badge";
+        badge.innerHTML='<i class="fas fa-star"></i> Answer Review';ft.appendChild(badge);
+        S.hist.push({role:"assistant",content:full});S.lastBotAnswer=full;
+        addFollowUpOptions(botEl,question,full);
+    }catch(err){bb.classList.remove("stm");bb.innerHTML='<span style="color:var(--err)">Error: '+(err.message||"Try again")+'</span>'}
+    S.busy=false;D.snd.disabled=false;D.inp.focus();
 }
 
-// SEND
-async function send() {
-    var t = D.inp.value.trim();
-    if (!t || S.busy) return;
-    if (typeof puter === "undefined" || !puter.ai) { toast("AI not ready", "warning"); return; }
-    if (!S.data) { toast("No data", "error"); return; }
-
-    S.busy = true;
-    D.snd.disabled = true;
-    D.inp.value = "";
-    D.inp.style.height = "auto";
-
-    // Remove any existing think box
+async function send(){
+    var t=D.inp.value.trim();if(!t||S.busy)return;
+    if(typeof puter==="undefined"||!puter.ai){toast("AI not ready","warning");return}
+    if(!S.data){toast("No data","error");return}
+    S.busy=true;D.snd.disabled=true;D.inp.value="";D.inp.style.height="auto";
     removeThinkBox();
-
-    addM("user", t);
-    S.hist.push({role: "user", content: t});
-
-    var p = sPrimary(t);
-    var b = sBroad(t);
-    var all = merge(p, b);
-    var c = ctx(all);
-
-    var sys = "You are an expert AI assistant with full access to video transcript content.\n\n"
-        + "YOUR MISSION: Answer completely and helpfully.\n\n"
-        + "RULES:\n"
-        + "- Answer from ANY angle\n"
-        + "- If concept is covered, STILL ANSWER even if exact words differ\n"
-        + "- Combine multiple sections for complete answers\n"
-        + "- Summarize, explain, compare, list as asked\n"
-        + "- Use conversation history for follow-ups\n"
-        + "- NEVER refuse reasonable questions\n"
-        + "- Be thorough and use formatting\n"
-        + "- At the END of your answer, add a line break then write: 'What would YOU answer?' to encourage thinking\n\n"
-        + "TRANSCRIPTS:\n==================\n" + c + "\n==================\n\n"
-        + "Answer thoroughly.";
-
-    var msgs = [{role: "system", content: sys}];
-    var h = S.hist.slice(-12);
-    for (var i = 0; i < h.length; i++) msgs.push(h[i]);
-
-    var model = D.model.value || "gpt-4o-mini";
-    var botEl = addM("bot", "", true);
-    var bb = botEl.querySelector(".m-bb");
-    var ft = botEl.querySelector(".m-ft");
-    var full = "";
-    var currentQuestion = t;
-
-    try {
-        var stream = await puter.ai.chat(msgs, {model: model, stream: true});
-        bb.innerHTML = "";
-        bb.classList.add("stm");
-        for await (var part of stream) {
-            var tk = (part && part.text) ? part.text : "";
-            full += tk;
-            bb.innerHTML = fm(full);
-            sd();
-        }
+    addM("user",t);S.hist.push({role:"user",content:t});
+    var p=sPrimary(t);var b=sBroad(t);var all=merge(p,b);var c=ctx(all);
+    var sys="You are an expert AI assistant with full access to video transcript content.\n\n"
+        +"YOUR MISSION: Answer completely and helpfully.\n\n"
+        +"RULES:\n"
+        +"- Answer from ANY angle\n"
+        +"- If concept is covered, STILL ANSWER even if exact words differ\n"
+        +"- Combine multiple sections for complete answers\n"
+        +"- Summarize, explain, compare, list as asked\n"
+        +"- Use conversation history for follow-ups\n"
+        +"- NEVER refuse reasonable questions\n"
+        +"- Be thorough and use formatting\n\n"
+        +"TRANSCRIPTS:\n==================\n"+c+"\n==================\n\n"
+        +"Answer thoroughly.";
+    var msgs=[{role:"system",content:sys}];
+    var h=S.hist.slice(-12);for(var i=0;i<h.length;i++)msgs.push(h[i]);
+    var model=D.model.value||"gpt-4o-mini";
+    var botEl=addM("bot","",true);var bb=botEl.querySelector(".m-bb");var ft=botEl.querySelector(".m-ft");var full="";
+    var currentQuestion=t;
+    try{
+        var stream=await puter.ai.chat(msgs,{model:model,stream:true});
+        bb.innerHTML="";bb.classList.add("stm");
+        for await(var part of stream){var tk=(part&&part.text)?part.text:"";full+=tk;bb.innerHTML=fm(full);sd()}
         bb.classList.remove("stm");
-
-        if (all.length > 0) {
-            var seen = {};
-            all.slice(0, 3).forEach(function(c) {
-                var k = fc(c.cat) + " > " + c.file.replace(/\.(txt|pdf)$/i, "");
-                if (!seen[k]) {
-                    seen[k] = true;
-                    var tg = document.createElement("span");
-                    tg.className = "src";
-                    tg.textContent = k;
-                    ft.appendChild(tg);
-                }
-            });
-        }
-
-        S.hist.push({role: "assistant", content: full});
-        S.lastBotAnswer = full;
-
-        // ADD FOLLOW-UP OPTIONS
-        addFollowUpOptions(botEl, currentQuestion, full);
-
-        // ADD THINK BOX
-        addThinkBox(botEl, currentQuestion);
-
-    } catch(err) {
-        bb.classList.remove("stm");
-        bb.innerHTML = '<span style="color:var(--err)">Error: ' + (err.message || "Try again") + '</span>';
-    }
-
-    S.busy = false;
-    D.snd.disabled = false;
-    D.inp.focus();
+        if(all.length>0){var seen={};all.slice(0,3).forEach(function(c){var k=fc(c.cat)+">"+c.file.replace(/\.(txt|pdf)$/i,"");if(!seen[k]){seen[k]=true;var tg=document.createElement("span");tg.className="src";tg.textContent=k;ft.appendChild(tg)}})}
+        S.hist.push({role:"assistant",content:full});S.lastBotAnswer=full;
+        addFollowUpOptions(botEl,currentQuestion,full);
+        addThinkBox(botEl,currentQuestion);
+    }catch(err){bb.classList.remove("stm");bb.innerHTML='<span style="color:var(--err)">Error: '+(err.message||"Try again")+'</span>'}
+    S.busy=false;D.snd.disabled=false;D.inp.focus();
 }
 
-// EVENTS
-D.snd.addEventListener("click", send);
-D.inp.addEventListener("keydown", function(e) {
-    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); }
-});
-D.inp.addEventListener("input", function() {
-    D.inp.style.height = "auto";
-    D.inp.style.height = Math.min(D.inp.scrollHeight, 100) + "px";
-});
+D.snd.addEventListener("click",send);
+D.inp.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send()}});
+D.inp.addEventListener("input",function(){D.inp.style.height="auto";D.inp.style.height=Math.min(D.inp.scrollHeight,100)+"px"});
 
-// BOOT
-async function boot() {
-    dbg("TranscriptBot starting...");
-    D.status.textContent = "Loading...";
-    D.stat.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
-    D.dbgBox.classList.add("show");
-
-    var data = await ldData();
-
-    if (!data) {
-        dbg("FAILED: No data", "bad");
-        D.status.textContent = "No data";
-        D.stat.innerHTML = '<span style="color:var(--err)">No data found</span>';
+async function boot(){
+    D.status.textContent="Loading...";
+    D.stat.innerHTML='<i class="fas fa-spinner fa-spin"></i> Loading...';
+    var data=await ldData();
+    if(!data){
+        D.status.textContent="No data";
+        D.stat.innerHTML='<span style="color:var(--err)">No data</span>';
         disable("No transcripts found");
-        D.welH.textContent = "No Content Yet";
-        D.welP.textContent = "Tap bug icon for details.";
-        D.chips.style.display = "none";
-        D.fbar.style.display = "none";
-        return;
+        D.welH.textContent="No Content Yet";
+        D.welP.textContent="Admin hasn't uploaded transcripts yet.";
+        D.chips.style.display="none";D.fbar.style.display="none";return;
     }
-
-    S.data = data;
-    S.set = data.settings || {};
-    var tf = cntAll();
-    var tc = Object.keys(data.categories).length;
-    dbg("SUCCESS: " + tf + " files, " + tc + " cats", "ok");
-    D.status.textContent = tf + " files, " + tc + " cats";
-
-    applySets();
-    buildCat();
-    buildChips();
-
-    setTimeout(function() { D.dbgBox.classList.remove("show"); }, 3000);
-
-    D.stat.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting AI...';
-    toast("Loaded " + tf + " transcripts", "success");
-
-    waitAI(15000).then(function() {
-        S.rdy = true;
-        enable();
-        online(true);
-        D.stat.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready';
-        dbg("AI connected", "ok");
-    });
-
-    setTimeout(function() {
-        if (!S.rdy) {
-            S.rdy = true;
-            enable();
-            online(true);
-            D.stat.innerHTML = '<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready';
-        }
-    }, 3000);
+    S.data=data;S.set=data.settings||{};
+    var tf=cntAll();var tc=Object.keys(data.categories).length;
+    D.status.textContent=tf+" files, "+tc+" cats";
+    applySets();buildCat();buildChips();
+    D.stat.innerHTML='<i class="fas fa-spinner fa-spin"></i> Connecting AI...';
+    toast("Loaded "+tf+" transcripts","success");
+    waitAI(15000).then(function(){S.rdy=true;enable();online(true);D.stat.innerHTML='<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready'});
+    setTimeout(function(){if(!S.rdy){S.rdy=true;enable();online(true);D.stat.innerHTML='<i class="fas fa-circle" style="color:var(--ok);font-size:7px"></i> Ready'}},3000);
 }
 
 boot();
